@@ -1,0 +1,123 @@
+# Decap CMS — admin panel at /admin
+# Login uses GitHub through Netlify. Set `repo` to your GitHub repository (see ADMIN-SETUP.md).
+backend:
+  name: github
+  repo: YOUR-GITHUB-USERNAME/vmount-website # TODO: change after creating the repo
+  branch: main
+  commit_messages:
+    update: "Admin: update {{collection}} “{{slug}}”"
+
+# Lets you try the admin on your computer with `npm run admin` (no login needed).
+local_backend: true
+
+site_url: https://vmountbikes.netlify.app # TODO: change to your real domain
+logo_url: /images/logo.png
+locale: en
+
+# Uploaded photos go here and are served from /images/uploads
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: catalog
+    label: Cycles
+    description: Add, edit or hide cycles. Changes go live about a minute after you click Publish.
+    editor: { preview: false }
+    files:
+      - name: products
+        label: All cycles
+        file: src/content/products.json
+        fields:
+          - name: products
+            label: Cycles
+            label_singular: Cycle
+            widget: list
+            summary: "{{fields.name}} — ₹{{fields.price}} ({{fields.category}})"
+            add_to_top: true
+            fields:
+              - { name: name, label: Cycle name, widget: string }
+              - { name: id, label: "Short ID (lowercase, no spaces, e.g. duster-red)", widget: string, pattern: ["^[a-z0-9-]+$", "Use only lowercase letters, numbers and dashes"] }
+              - { name: price, label: "Price (₹)", widget: number, value_type: int, min: 0 }
+              - name: category
+                label: Category
+                widget: select
+                options: [Mountain, Road, City, Hybrid, Electric, Kids]
+              - { name: image, label: Photo (PNG/WebP with no background looks best), widget: image, choose_url: false }
+              - { name: color, label: Accent colour (glow behind the card), widget: color, default: "#f7941d" }
+              - { name: tag, label: "Badge (optional, e.g. New, Bestseller, Sale)", widget: string, required: false }
+              - { name: specs, label: Key features, widget: list, hint: "Short points like: Dual disc brakes", default: [] }
+              - { name: featured, label: Show in the 360° showroom, widget: boolean, default: false, required: false }
+              - { name: visible, label: Show on website, widget: boolean, default: true, required: false }
+
+  - name: settings
+    label: Website settings
+    editor: { preview: false }
+    files:
+      - name: site
+        label: Business info & page text
+        file: src/content/settings.json
+        fields:
+          - name: business
+            label: Business details
+            widget: object
+            collapsed: false
+            fields:
+              - { name: name, label: Short brand name, widget: string }
+              - { name: fullName, label: Full business name, widget: string }
+              - { name: tagline, label: Tagline, widget: string }
+              - { name: logo, label: Logo, widget: image, choose_url: false }
+              - { name: category, label: "Business type (e.g. Bicycle wholesaler in Gujarat)", widget: string }
+              - { name: location, label: Short location (footer), widget: string }
+              - { name: address, label: Full address, widget: text }
+              - { name: hours, label: Opening hours, widget: string }
+              - { name: phone, label: Phone (as shown), widget: string }
+              - { name: whatsapp, label: "WhatsApp number (digits only, with 91, e.g. 919023238280)", widget: string, pattern: ["^[0-9]{10,15}$", "Digits only"] }
+              - { name: email, label: Email (leave empty to hide), widget: string, required: false }
+              - { name: instagramHandle, label: Instagram handle, widget: string }
+              - { name: instagramUrl, label: Instagram link, widget: string }
+              - { name: googleRating, label: Google rating, widget: number, value_type: float, min: 0, max: 5, step: 0.1 }
+              - { name: googleReviews, label: Number of Google reviews, widget: number, value_type: int, min: 0 }
+              - { name: googleMapsQuery, label: Google Maps search text (for Directions and map), widget: string }
+          - name: hero
+            label: Top of page
+            widget: object
+            fields:
+              - { name: eyebrow, label: Small text above the headline, widget: string }
+              - { name: intro, label: Intro paragraph, widget: text }
+          - name: promo
+            label: Featured model section
+            widget: object
+            fields:
+              - { name: eyebrow, label: Small label, widget: string }
+              - { name: title, label: Model name, widget: string }
+              - { name: text, label: Description, widget: text }
+              - { name: points, label: Highlights, widget: list }
+              - { name: image, label: Poster image, widget: image, choose_url: false }
+          - name: features
+            label: Why choose us (cards)
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: body, label: Text, widget: text }
+          - name: stats
+            label: Numbers (counters)
+            widget: list
+            summary: "{{fields.value}}{{fields.suffix}} {{fields.label}}"
+            fields:
+              - { name: value, label: Number, widget: number, value_type: float }
+              - { name: suffix, label: "After the number (e.g. +, %, ★)", widget: string, required: false }
+              - { name: label, label: Label, widget: string }
+              - { name: decimals, label: Decimal places, widget: number, value_type: int, default: 0, min: 0, max: 2 }
+          - name: testimonials
+            label: Customer reviews
+            widget: list
+            summary: "{{fields.name}} — {{fields.role}}"
+            fields:
+              - { name: quote, label: Review, widget: text }
+              - { name: name, label: Customer name, widget: string }
+              - { name: role, label: "Place or detail (e.g. Mehsana)", widget: string }
+          - name: reels
+            label: Backup reels (shown only if the Instagram connection is off)
+            widget: list
+            hint: "Reel code from the link, e.g. instagram.com/reel/DddJmDmi7C_ → DddJmDmi7C_"

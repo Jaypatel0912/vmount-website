@@ -1,0 +1,102 @@
+{
+  "business": {
+    "name": "VMount",
+    "fullName": "V Mount Bikes",
+    "tagline": "Passion for Cycling",
+    "logo": "/images/logo.png",
+    "category": "Bicycle wholesaler in Gujarat",
+    "location": "Bhandu, Unjha, Mehsana",
+    "address": "Bhandu - Bokarvada Link Rd, opp. P&T College, nr. Canal, Unjha, Mehsana, Gujarat 384120",
+    "hours": "Opens 9 am",
+    "phone": "+91 90232 38280",
+    "whatsapp": "919023238280",
+    "email": "",
+    "instagramHandle": "@vmountbikes",
+    "instagramUrl": "https://www.instagram.com/vmountbikes/",
+    "googleRating": 4.4,
+    "googleReviews": 75,
+    "googleMapsQuery": "Vmount bikes, Bhandu, Unjha, Mehsana"
+  },
+  "hero": {
+    "eyebrow": "Made in Unjha, Mehsana · Gujarat",
+    "intro": "V Mount Bikes — mountain, road, city and electric bicycles, straight from our factory at wholesale prices."
+  },
+  "promo": {
+    "title": "Duster",
+    "eyebrow": "Featured model",
+    "image": "/images/duster-poster.webp",
+    "text": "When in doubt, pedal it out. Built for rough Gujarat roads and long weekend rides.",
+    "points": [
+      "Hi-tensile steel, TIG welded",
+      "Double-wall alloy rims",
+      "Dual disc brakes",
+      "Alloy pedals"
+    ]
+  },
+  "features": [
+    {
+      "title": "Factory-direct prices",
+      "body": "Bikes made in our own Mehsana factory and sold at wholesale rates — no middlemen."
+    },
+    {
+      "title": "Built to last",
+      "body": "Hi-tensile steel TIG-welded frames and double-wall alloy rims on every model."
+    },
+    {
+      "title": "Bikes for everyone",
+      "body": "Kids, city, mountain, road and electric — over 20 models in stock."
+    },
+    {
+      "title": "Service you can trust",
+      "body": "Free assembly and first service, plus genuine spare parts at the factory store."
+    }
+  ],
+  "stats": [
+    {
+      "value": 20,
+      "suffix": "+",
+      "label": "Models in stock",
+      "decimals": 0
+    },
+    {
+      "value": 1100,
+      "suffix": "+",
+      "label": "Instagram followers",
+      "decimals": 0
+    },
+    {
+      "value": 100,
+      "suffix": "%",
+      "label": "Factory direct",
+      "decimals": 0
+    },
+    {
+      "value": 4.4,
+      "suffix": "★",
+      "label": "Google rating · 75 reviews",
+      "decimals": 1
+    }
+  ],
+  "testimonials": [
+    {
+      "quote": "Bought straight from the factory — much better price than the city shops, and the build quality is excellent.",
+      "name": "Customer name",
+      "role": "Mehsana"
+    },
+    {
+      "quote": "Got a Duster for my son. Strong frame, disc brakes work great, and they set it up for free.",
+      "name": "Customer name",
+      "role": "Visnagar"
+    },
+    {
+      "quote": "Wide range of models in one place. The staff helped me choose the right size.",
+      "name": "Customer name",
+      "role": "Ahmedabad"
+    }
+  ],
+  "reels": [
+    "DddJmDmi7C_",
+    "DdLKMXJhmSX",
+    "Delr3jdT-kt"
+  ]
+}

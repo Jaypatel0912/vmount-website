@@ -1,0 +1,324 @@
+{
+  "products": [
+    {
+      "id": "duster",
+      "name": "Duster",
+      "category": "Mountain",
+      "price": 12499,
+      "image": "/images/bikes/bike-20230609-WA0013.webp",
+      "color": "#3ddc84",
+      "tag": "Bestseller",
+      "specs": [
+        "26\" alloy rims",
+        "Dual disc brakes",
+        "Mudguards"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "phoenix",
+      "name": "Phoenix Road",
+      "category": "Road",
+      "price": 24999,
+      "image": "/images/bikes/bike-20230609-WA0002.webp",
+      "color": "#f7941d",
+      "tag": "New",
+      "specs": [
+        "700C wheels",
+        "Drop bar",
+        "14-speed"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "velocity",
+      "name": "Velocity 700C",
+      "category": "Road",
+      "price": 21999,
+      "image": "/images/bikes/bike-20230609-WA0001.webp",
+      "color": "#ff3b30",
+      "tag": "",
+      "specs": [
+        "700C wheels",
+        "Disc brakes",
+        "Drop bar"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "e-voyager",
+      "name": "E-Voyager",
+      "category": "Electric",
+      "price": 38999,
+      "image": "/images/bikes/bike-20230609-WA0003.webp",
+      "color": "#8fa3b8",
+      "tag": "Electric",
+      "specs": [
+        "Hub motor",
+        "Rear carrier",
+        "Disc brakes"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "blaze",
+      "name": "Blaze Mag",
+      "category": "Mountain",
+      "price": 15999,
+      "image": "/images/bikes/bike-20230609-WA0004.webp",
+      "color": "#f7941d",
+      "tag": "",
+      "specs": [
+        "Mag alloy wheels",
+        "21-speed",
+        "Front suspension"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "aqua-trail",
+      "name": "Aqua Trail",
+      "category": "Mountain",
+      "price": 13499,
+      "image": "/images/bikes/bike-20230609-WA0008.webp",
+      "color": "#2ee6c5",
+      "tag": "",
+      "specs": [
+        "Fat tyres",
+        "Dual disc",
+        "Front suspension"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "hunter",
+      "name": "Hunter Pro",
+      "category": "Mountain",
+      "price": 13999,
+      "image": "/images/bikes/bike-20230609-WA0007.webp",
+      "color": "#3aa0ff",
+      "tag": "",
+      "specs": [
+        "Fat tyres",
+        "Dual disc",
+        "Mudguards"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "rapid",
+      "name": "Rapid 26T",
+      "category": "Mountain",
+      "price": 11499,
+      "image": "/images/bikes/bike-20230609-WA0000.webp",
+      "color": "#d4e157",
+      "tag": "",
+      "specs": [
+        "26\" wheels",
+        "Dual disc",
+        "7-speed"
+      ],
+      "featured": false,
+      "visible": true
+    },
+    {
+      "id": "storm",
+      "name": "Storm 26T",
+      "category": "Mountain",
+      "price": 11999,
+      "image": "/images/bikes/bike-20230609-WA0005.webp",
+      "color": "#ff9f43",
+      "tag": "",
+      "specs": [
+        "Rainbow rims",
+        "Disc brakes",
+        "Mudguards"
+      ],
+      "featured": false,
+      "visible": true
+    },
+    {
+      "id": "shadow",
+      "name": "Shadow 27.5",
+      "category": "Mountain",
+      "price": 14499,
+      "image": "/images/bikes/bike-20230609-WA0009.webp",
+      "color": "#9aa5b1",
+      "tag": "",
+      "specs": [
+        "27.5\" wheels",
+        "21-speed",
+        "Dual disc"
+      ],
+      "featured": false,
+      "visible": true
+    },
+    {
+      "id": "army-trail",
+      "name": "Army Trail",
+      "category": "Mountain",
+      "price": 12999,
+      "image": "/images/bikes/bike-20230609-WA0011.webp",
+      "color": "#9bbf3a",
+      "tag": "",
+      "specs": [
+        "21-speed",
+        "Dual disc",
+        "Front suspension"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "army-disc",
+      "name": "Army Trail Disc",
+      "category": "Mountain",
+      "price": 12499,
+      "image": "/images/bikes/bike-20230609-WA0012.webp",
+      "color": "#9bbf3a",
+      "tag": "",
+      "specs": [
+        "Single speed",
+        "Dual disc",
+        "Rainbow rims"
+      ],
+      "featured": false,
+      "visible": true
+    },
+    {
+      "id": "duster-red",
+      "name": "Duster Red",
+      "category": "Mountain",
+      "price": 12499,
+      "image": "/images/bikes/bike-20230609-WA0015.webp",
+      "color": "#ff4d4d",
+      "tag": "",
+      "specs": [
+        "Dual disc",
+        "Mudguards",
+        "Alloy pedals"
+      ],
+      "featured": false,
+      "visible": true
+    },
+    {
+      "id": "fury",
+      "name": "Fury",
+      "category": "Mountain",
+      "price": 12999,
+      "image": "/images/bikes/bike-20230609-WA0017.webp",
+      "color": "#ff3b30",
+      "tag": "",
+      "specs": [
+        "Dual disc",
+        "Mudguards",
+        "Front suspension"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "cruiser",
+      "name": "City Cruiser",
+      "category": "City",
+      "price": 7999,
+      "image": "/images/bikes/bike-20230609-WA0006.webp",
+      "color": "#ff3b30",
+      "tag": "",
+      "specs": [
+        "Single speed",
+        "Mudguards",
+        "Comfort saddle"
+      ],
+      "featured": false,
+      "visible": true
+    },
+    {
+      "id": "carrier",
+      "name": "Classic Carrier",
+      "category": "City",
+      "price": 8499,
+      "image": "/images/bikes/bike-20230609-WA0010.webp",
+      "color": "#ff3b30",
+      "tag": "",
+      "specs": [
+        "Rear carrier",
+        "Single speed",
+        "Mudguards"
+      ],
+      "featured": false,
+      "visible": true
+    },
+    {
+      "id": "urban",
+      "name": "Urban Glide",
+      "category": "City",
+      "price": 7499,
+      "image": "/images/bikes/bike-20230609-WA0016.webp",
+      "color": "#c0c6cc",
+      "tag": "",
+      "specs": [
+        "Single speed",
+        "Lightweight",
+        "V-brakes"
+      ],
+      "featured": false,
+      "visible": true
+    },
+    {
+      "id": "daily",
+      "name": "Daily Rider",
+      "category": "City",
+      "price": 7999,
+      "image": "/images/bikes/bike-20230609-WA0018.webp",
+      "color": "#c0c6cc",
+      "tag": "",
+      "specs": [
+        "Rear carrier",
+        "Single speed",
+        "Mudguards"
+      ],
+      "featured": false,
+      "visible": true
+    },
+    {
+      "id": "swift",
+      "name": "Swift Hybrid",
+      "category": "Hybrid",
+      "price": 14999,
+      "image": "/images/bikes/bike-20230609-WA0019.webp",
+      "color": "#ff3b30",
+      "tag": "",
+      "specs": [
+        "700C wheels",
+        "Disc brakes",
+        "Flat bar"
+      ],
+      "featured": true,
+      "visible": true
+    },
+    {
+      "id": "steel-grey",
+      "name": "Steel Grey Hybrid",
+      "category": "Hybrid",
+      "price": 14999,
+      "image": "/images/bikes/bike-20230609-WA0020.webp",
+      "color": "#a8b4c0",
+      "tag": "",
+      "specs": [
+        "700C wheels",
+        "Disc brakes",
+        "Mudguards"
+      ],
+      "featured": false,
+      "visible": true
+    }
+  ]
+}
