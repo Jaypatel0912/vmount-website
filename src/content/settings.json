@@ -19,7 +19,14 @@
   },
   "hero": {
     "eyebrow": "Made in Unjha, Mehsana · Gujarat",
-    "intro": "V Mount Bikes — mountain, road, city and electric bicycles, straight from our factory at wholesale prices."
+    "intro": "V Mount Bikes — mountain, road, city and electric bicycles, straight from our factory at wholesale prices.",
+    "bikes": [
+      "fury",
+      "aqua-trail",
+      "duster",
+      "blaze",
+      "e-voyager"
+    ]
   },
   "promo": {
     "title": "Duster",

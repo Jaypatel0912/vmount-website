@@ -89,11 +89,51 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -0.03em; }
 .swatches span:first-child { margin-right: 6px; }
 .swatches button { position: relative; width: 26px; height: 26px; border-radius: 50%; }
 .swatch-ring { position: absolute; inset: -5px; border: 2px solid var(--text); border-radius: 50%; }
-.hero-canvas { position: relative; height: min(72vh, 680px); z-index: 1; }
-.canvas-loading { display: grid; place-items: center; height: 100%; color: var(--muted); }
-.drag-hint {
-  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-  font-size: 0.78rem; color: var(--muted); white-space: nowrap;
+.hero-stage {
+  position: relative; height: min(70vh, 640px); z-index: 1;
+  display: grid; place-items: center; perspective: 1200px;
+}
+/* Giant outlined brand word behind the bike */
+.hero-word {
+  position: absolute; top: 14%; left: 50%; translate: -50% 0; white-space: nowrap; pointer-events: none;
+  font-family: var(--display); font-weight: 700; font-size: clamp(5rem, 13vw, 12rem); letter-spacing: -0.04em;
+  color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--accent) 45%, transparent); opacity: 0.55;
+  transition: -webkit-text-stroke-color 0.6s;
+}
+.stage-glow {
+  position: absolute; width: 70%; aspect-ratio: 1; border-radius: 50%; top: 12%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 38%, transparent) 0%, transparent 65%);
+  filter: blur(30px); transition: background 0.6s;
+}
+/* Spinning platform under the bike */
+.stage-floor { position: absolute; bottom: 9%; width: 82%; aspect-ratio: 1; transform: rotateX(78deg); transform-style: preserve-3d; }
+.stage-floor span { position: absolute; inset: 0; border-radius: 50%; }
+.stage-floor span:first-child {
+  border: 2px dashed color-mix(in srgb, var(--accent) 55%, transparent);
+  animation: spin 18s linear infinite;
+}
+.stage-floor span:last-child {
+  inset: 12%; background: radial-gradient(circle, rgba(0, 0, 0, 0.75) 30%, color-mix(in srgb, var(--accent) 20%, transparent) 60%, transparent 70%);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.hero-bike-tilt {
+  position: relative; width: min(92%, 760px); aspect-ratio: 16 / 10; transform-style: preserve-3d;
+  display: grid; place-items: center; animation: float 5s ease-in-out infinite;
+}
+@keyframes float { 50% { translate: 0 -12px; } }
+.hero-bike {
+  width: 100%; height: 100%; object-fit: contain; user-select: none;
+  filter: drop-shadow(0 30px 30px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 40px color-mix(in srgb, var(--accent) 25%, transparent));
+}
+.hero-tag {
+  position: absolute; bottom: 2%; display: flex; align-items: baseline; gap: 12px; padding: 10px 18px; border-radius: 999px;
+  background: rgba(19, 19, 22, 0.75); backdrop-filter: blur(10px); border: 1px solid var(--line); white-space: nowrap;
+}
+.hero-tag-cat { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.hero-tag strong { font-family: var(--display); font-size: 1.1rem; }
+.hero-tag-price { color: var(--muted); font-size: 0.9rem; }
+@media (prefers-reduced-motion: reduce) {
+  .stage-floor span:first-child, .hero-bike-tilt { animation: none; }
 }
 .scroll-cue {
   position: absolute; bottom: 24px; left: 50%; margin-left: -20px;
@@ -301,8 +341,12 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -0.03em; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 980px) {
-  .hero { grid-template-columns: 1fr; padding-top: 96px; }
-  .hero-canvas { height: 46vh; order: -1; }
+  .hero { grid-template-columns: 1fr; padding-top: 88px; gap: 8px; }
+  .hero-stage { height: auto; order: -1; padding: 4px 0 8px; }
+  .hero-bike-tilt { width: min(100%, 560px); }
+  .hero-tag { position: relative; bottom: auto; margin-top: 2px; }
+  .hero-word { top: 2%; }
+  .stage-floor { bottom: 16%; width: 70%; }
   .stats, .features { grid-template-columns: repeat(2, 1fr); }
   .cta, .promo { grid-template-columns: 1fr; }
   .reels { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }

@@ -40,7 +40,11 @@ export const showcase = (() => {
   return (picked.length >= 3 ? picked : products).slice(0, 12);
 })();
 
-export const heroColors = ["#f7941d", "#ff3b30", "#2ee6c5", "#3aa0ff", "#f4f4f5"];
+/** Bikes shown in the top banner, in the order set in the admin. */
+export const heroBikes = (() => {
+  const picked = settings.hero.bikes.map((id) => products.find((p) => p.id === id)).filter((p): p is Product => !!p);
+  return picked.length ? picked : products.slice(0, 4);
+})();
 
 export const { hero, promo, features, stats, testimonials, reels } = settings;
 

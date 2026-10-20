@@ -84,6 +84,7 @@ collections:
             fields:
               - { name: eyebrow, label: Small text above the headline, widget: string }
               - { name: intro, label: Intro paragraph, widget: text }
+              - { name: bikes, label: "Bikes in the top banner (Short IDs, first one shows first)", widget: list, hint: "e.g. fury, aqua-trail, duster — use the Short ID from the Cycles list" }
           - name: promo
             label: Featured model section
             widget: object
