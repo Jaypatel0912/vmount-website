@@ -1,5 +1,5 @@
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 
 /** Plain-file storage for the festival API (used by `npm run dev` on your computer). */
 export function fileStore(dir) {
@@ -16,6 +16,7 @@ export function fileStore(dir) {
     },
     async setJSON(key, value) {
       await ready;
+      await mkdir(dirname(file(key)), { recursive: true });
       await writeFile(file(`${key}.json`), JSON.stringify(value, null, 2));
     },
     async getBytes(key) {
@@ -30,6 +31,7 @@ export function fileStore(dir) {
     },
     async setBytes(key, bytes, type) {
       await ready;
+      await mkdir(dirname(file(key)), { recursive: true });
       await writeFile(file(key), bytes);
       await writeFile(file(`${key}.type`), type || "");
     },

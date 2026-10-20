@@ -1,14 +1,26 @@
-import { StrictMode } from "react";
+import { StrictMode, type ComponentType } from "react";
 import { createRoot } from "react-dom/client";
 import { MotionConfig } from "motion/react";
-import App from "./App";
-import PosterAdmin from "./poster/PosterAdmin";
+import { loadCatalog } from "./data/site";
 import "./styles.css";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <MotionConfig reducedMotion="user">
-      {["/poster", "/posters"].includes(window.location.pathname.replace(/\/+$/, "")) ? <PosterAdmin /> : <App />}
-    </MotionConfig>
-  </StrictMode>
-);
+const path = window.location.pathname.replace(/\/+$/, "");
+
+// Pages are imported after the cycle list is loaded, so every section sees the latest cycles.
+async function start() {
+  await loadCatalog();
+  let Page: ComponentType;
+  if (path === "/cycles") Page = (await import("./admin/CycleAdmin")).default;
+  else if (path === "/poster" || path === "/posters") Page = (await import("./poster/PosterAdmin")).default;
+  else Page = (await import("./App")).default;
+
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <MotionConfig reducedMotion="user">
+        <Page />
+      </MotionConfig>
+    </StrictMode>,
+  );
+}
+
+start();

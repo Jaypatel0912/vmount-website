@@ -14,6 +14,8 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
   const { festival, offers } = useFestival();
   const offer = offers.get(p.id);
   const hasSaving = !!offer && offer.save > 0;
+  const out = p.stock === 0;
+  const low = typeof p.stock === "number" && p.stock > 0 && p.stock <= 3;
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
   const rotateY = useSpring(useTransform(mx, [0, 1], [-10, 10]), { stiffness: 200, damping: 20 });
@@ -24,7 +26,7 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
   return (
     <motion.article
       layout
-      className="card"
+      className={`card${out ? " is-out" : ""}`}
       style={{ rotateX, rotateY, ["--card" as string]: p.color }}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -40,7 +42,9 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
         my.set(0.5);
       }}
     >
-      {offer && festival ? (
+      {out ? (
+        <span className="card-tag is-out">Out of stock</span>
+      ) : offer && festival ? (
         <span className="card-tag is-offer">{festival.name} offer</span>
       ) : (
         p.tag && <span className="card-tag">{p.tag}</span>
@@ -54,6 +58,7 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
       </motion.div>
       <div className="card-body">
         <span className="card-cat">{p.category}</span>
+        {low && <span className="card-low">Only {p.stock} left</span>}
         <h3>{p.name}</h3>
         <ul className="card-specs">
           {p.specs.map((s) => (
@@ -70,15 +75,19 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
             <strong>{inr.format(p.price)}</strong>
           )}
           <motion.a
-            className="btn btn-small btn-wa"
-            href={waLink(`Hi VMount, I'm interested in the ${p.name}. Is it available?`)}
+            className={`btn btn-small ${out ? "btn-ghost" : "btn-wa"}`}
+            href={waLink(
+              out
+                ? `Hi VMount, please let me know when the ${p.name} is back in stock.`
+                : `Hi VMount, I'm interested in the ${p.name}. Is it available?`,
+            )}
             target="_blank"
             rel="noreferrer"
             whileTap={{ scale: 0.92 }}
             whileHover={{ scale: 1.05 }}
-            onClick={onAdd}
+            onClick={out ? undefined : onAdd}
           >
-            Order on WhatsApp
+            {out ? "Notify me" : "Order on WhatsApp"}
           </motion.a>
         </div>
       </div>

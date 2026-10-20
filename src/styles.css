@@ -365,6 +365,15 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -0.03em; }
 }
 .fest-pill a { color: #ffd56b; font-weight: 700; }
 .fest-pill button { width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); flex: none; }
+.card.is-out .card-media img { filter: grayscale(0.85) drop-shadow(0 14px 14px rgba(0, 0, 0, 0.35)); opacity: 0.7; }
+.card-tag.is-out { background: #3f3f46; color: #e4e4e7; }
+.card-low { display: inline-block; margin-left: 10px; font-size: 0.75rem; font-weight: 600; color: #ffd56b; }
+.staff-links { display: flex; gap: 6px; width: 100%; justify-content: flex-end; }
+.staff-links a {
+  font-size: 0.7rem; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line);
+  color: rgba(161, 161, 170, 0.55); transition: color 0.2s, border-color 0.2s;
+}
+.staff-links a:hover { color: var(--text); border-color: var(--accent); }
 .card-tag.is-offer { background: linear-gradient(90deg, #f7c04a, #f7941d); }
 .card-price { display: flex; flex-direction: column; line-height: 1.15; }
 .card-price s { color: var(--muted); font-size: 0.82rem; }

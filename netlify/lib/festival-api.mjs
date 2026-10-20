@@ -7,38 +7,10 @@
 //   POST   /api/festival/login              { password } -> { token }
 //   PUT    /api/festival                    publish offer + posters (needs token)
 //   DELETE /api/festival                    remove the offer from the website (needs token)
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { decodeImage as decode, handleLogin, isAuthorized, json, notConfigured } from "./auth.mjs";
 
 const SIZES = ["square", "story", "wide"];
-const TOKEN_HOURS = 12;
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
-
-const json = (body, status = 200, headers = {}) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { "Content-Type": "application/json", "Cache-Control": "no-store", ...headers },
-  });
-
-const safeEqual = (a, b) => {
-  const A = Buffer.from(String(a));
-  const B = Buffer.from(String(b));
-  return A.length === B.length && timingSafeEqual(A, B);
-};
-
-const secret = (env) => env.POSTER_SECRET || `vmount-poster:${env.POSTER_PASSWORD}`;
-const sign = (env, exp) => createHmac("sha256", secret(env)).update(String(exp)).digest("base64url");
-
-function makeToken(env) {
-  const exp = Date.now() + TOKEN_HOURS * 3600 * 1000;
-  return `${exp}.${sign(env, exp)}`;
-}
-
-function isAuthorized(req, env) {
-  const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
-  const [exp, sig] = token.split(".");
-  if (!exp || !sig || Number(exp) < Date.now()) return false;
-  return safeEqual(sig, sign(env, exp));
-}
 
 const text = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 const isDate = (v) => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v));
@@ -81,12 +53,7 @@ function cleanFestival(f) {
   return [out, null];
 }
 
-function decodeImage(dataUrl) {
-  const m = /^data:(image\/(?:webp|png|jpeg));base64,([A-Za-z0-9+/=]+)$/.exec(dataUrl || "");
-  if (!m) return null;
-  const bytes = Buffer.from(m[2], "base64");
-  return bytes.length && bytes.length <= MAX_IMAGE_BYTES ? { type: m[1], bytes } : null;
-}
+const decodeImage = (dataUrl) => decode(dataUrl, MAX_IMAGE_BYTES);
 
 export async function handleFestival(req, store, env) {
   const path = new URL(req.url).pathname.replace(/\/+$/, "");
@@ -109,18 +76,8 @@ export async function handleFestival(req, store, env) {
     });
   }
 
-  if (!env.POSTER_PASSWORD) {
-    return json({ error: "The poster page is not set up yet (POSTER_PASSWORD is missing)." }, 503);
-  }
-
-  if (path === "/api/festival/login" && req.method === "POST") {
-    const body = await req.json().catch(() => ({}));
-    if (!safeEqual(body.password ?? "", env.POSTER_PASSWORD)) {
-      await new Promise((r) => setTimeout(r, 800)); // slow down guessing
-      return json({ error: "Wrong password" }, 401);
-    }
-    return json({ token: makeToken(env), hours: TOKEN_HOURS });
-  }
+  if (path === "/api/festival/login" && req.method === "POST") return handleLogin(req, env);
+  if (!env.POSTER_PASSWORD) return notConfigured();
 
   if (path === "/api/festival" && (req.method === "PUT" || req.method === "DELETE")) {
     if (!isAuthorized(req, env)) return json({ error: "Please log in again" }, 401);

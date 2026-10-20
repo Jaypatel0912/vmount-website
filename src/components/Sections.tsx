@@ -237,6 +237,15 @@ export function Footer() {
           Instagram
         </a>
       </span>
+      {/* Staff-only pages (password protected) */}
+      <span className="staff-links">
+        <a href="/poster" rel="nofollow" title="Staff: festival posters">
+          Posters
+        </a>
+        <a href="/cycles" rel="nofollow" title="Staff: manage cycles">
+          Cycles
+        </a>
+      </span>
     </footer>
   );
 }

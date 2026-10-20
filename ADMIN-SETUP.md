@@ -2,13 +2,13 @@
 
 The website has a built-in admin panel at **`/admin`**. From it you can:
 
-- **Cycles:** add, edit or hide bikes (name, price, category, photo, highlight colour, badge, key features), and choose which bikes appear in the 360° showroom.
 - **Website settings:** business details (address, phone, WhatsApp, hours, email, Google rating), the top-of-page text, the featured model section, the "Why choose us" cards, the counters and the customer reviews.
 - **Media:** upload new photos. Bike photos with a transparent background (PNG/WebP) look best.
 
 When you click **Publish**, the change is saved and the website updates itself in about 1 minute.
 
-Festival offers and posters have their own page: **`/poster`** (see below).
+Cycles, prices and stock are managed on **`/cycles`**, and festival posters on **`/poster`** (see below).
+Both pages have small **Cycles** and **Posters** links at the bottom right of the website.
 
 The setup below is done **once**. It needs two free accounts: **GitHub**, which stores the website files, and **Netlify**, which hosts the website.
 
@@ -118,3 +118,18 @@ The password is checked by the server and is never stored in the website code.
 
 To change the password later, edit `POSTER_PASSWORD` and redeploy. Anyone still logged in is logged out automatically.
 When testing on your computer, the password is read from `.env.local`, which is never uploaded.
+
+---
+
+## Cycles, prices and stock: `/cycles`
+
+Open **`https://your-site/cycles`**, or click the small **Cycles** link at the bottom of the website, and enter the staff password. It's the same password as `/poster`, and one login covers both pages.
+
+- **Add new cycle**: enter the name, category, price, stock and key features, and upload a photo. Keep **Remove white background** ticked for photos on a white background; the preview shows the result before you save.
+- **Edit**: change any detail, including the photo.
+- **− / +**: change the stock by one, for example after a sale. At 0 the website shows **Out of stock** with a **Notify me** button. At 3 or fewer it shows **Only N left**. Leave stock empty if you don't want to track it.
+- **Hide / Show**: take a cycle off the website without deleting it.
+- **Delete**: remove it for good.
+
+Changes appear on the website within about a minute, with no code change or GitHub upload needed.
+The first time you save on `/cycles`, the saved list replaces the built-in list in `src/content/products.json`.
