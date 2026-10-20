@@ -93,8 +93,17 @@ def process(path):
     mag_cells = [k for k, a in area.items() if 8000 * s2 <= a < 60000 * s2]  # openings in mag wheels
     hubs = (find_hubs(spoke_cells, int(12 * scale), 10) + find_hubs(mag_cells, int(22 * scale), 4, ring_check=True))[:2]  # a bike has two wheels
     HUBS.append([(int(hx), int(hy), int(r)) for (hy, hx), r in hubs])
+    # Studio-white level of this photo; enclosed white just as pure is background seen
+    # through a small gap (under the saddle, chainring/brake-disc holes). Lettering is duller.
+    bg_level = float(np.median(mn[np.isin(lab, list(border))])) if border else 255.0
+    pure_level = min(250.0, bg_level - 5)
     still = []
     for k in keep_ids:
+        comp = lab[slices[k-1]] == k
+        vals = mn[slices[k-1]][comp]
+        if (vals >= pure_level).mean() >= 0.5 and vals.mean() >= pure_level - 7:
+            bg_ids.add(k); reason[k] = "pure"
+            continue
         sl = slices[k-1]
         cy, cx = (sl[0].start + sl[0].stop) / 2, (sl[1].start + sl[1].stop) / 2
         d = min((np.hypot(cy - hy, cx - hx) / r for (hy, hx), r in hubs), default=9)
@@ -146,7 +155,7 @@ for f in files:
     im.save(p, "WEBP", quality=90, method=6)
     if dbg:
         o = rgb.astype(np.uint8).copy(); o[kept] = (255, 0, 255)
-        colors = {"thick": (0, 200, 255), "ring": (255, 220, 0), "wheel": (0, 220, 90)}
+        colors = {"thick": (0, 200, 255), "ring": (255, 220, 0), "wheel": (0, 220, 90), "pure": (255, 120, 0)}
         for k, r in reason.items():
             o[lab == k] = colors[r]
         Image.fromarray(o).crop(box).save(os.path.join(dbg, name[-6:] + "_kept.png"))
