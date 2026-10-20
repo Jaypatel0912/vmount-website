@@ -10,7 +10,7 @@ backend:
 # Lets you try the admin on your computer with `npm run admin` (no login needed).
 local_backend: true
 
-site_url: https://vmountbikes.netlify.app # TODO: change to your real domain
+site_url: https://vmount-cycle.netlify.app
 logo_url: /images/logo.png
 locale: en
 
