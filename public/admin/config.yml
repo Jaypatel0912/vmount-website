@@ -2,7 +2,7 @@
 # Login uses GitHub through Netlify. Set `repo` to your GitHub repository (see ADMIN-SETUP.md).
 backend:
   name: github
-  repo: YOUR-GITHUB-USERNAME/vmount-website # TODO: change after creating the repo
+  repo: Jaypatel0912/vmount-website
   branch: main
   commit_messages:
     update: "Admin: update {{collection}} “{{slug}}”"
