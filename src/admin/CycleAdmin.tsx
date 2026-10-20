@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { allProducts, brand, categories, type Category, type Product } from "../data/site";
-import { Login, readToken, saveToken } from "./auth";
+import { Login, StaffBar, readToken, saveToken, useLoginGuard } from "./auth";
 import { preparePhoto } from "./photo";
 import "./cycles.css";
 
@@ -80,6 +80,7 @@ function stockLabel(p: Product) {
 
 export default function CycleAdmin() {
   const [token, setToken] = useState<string | null>(readToken);
+  useLoginGuard(setToken);
   const [cycles, setCycles] = useState<Product[]>(() => [...allProducts]);
   const [editing, setEditing] = useState<{ draft: Draft; isNew: boolean; originalId?: string } | null>(null);
   const [query, setQuery] = useState("");
@@ -169,19 +170,7 @@ export default function CycleAdmin() {
 
   return (
     <main className="ps cy">
-      <header className="ps-head">
-        <a href="/" className="ps-brand">
-          <img src={brand.logo} alt="" /> {brand.fullName}
-        </a>
-        {token && (
-          <nav className="cy-nav">
-            <a href="/poster">Posters</a>
-            <button className="btn btn-ghost btn-small" onClick={logout}>
-              Log out
-            </button>
-          </nav>
-        )}
-      </header>
+      <StaffBar current="cycles" loggedIn={!!token} onLogout={logout} />
 
       <AnimatePresence>
         {!token && (

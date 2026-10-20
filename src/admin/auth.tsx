@@ -1,10 +1,10 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { motion } from "motion/react";
 import { brand } from "../data/site";
+import { TOKEN_KEY, clearStaffLogin } from "./session";
 import "../poster/poster.css";
 
 // One login for every staff page (/poster and /cycles), kept for this browser tab.
-const TOKEN_KEY = "vmount-poster-token";
 
 export function readToken() {
   try {
@@ -89,4 +89,51 @@ export function Login({ onToken, title = "Poster maker", subtitle = "Enter the p
       </motion.form>
     </motion.div>
   );
+}
+
+/** Top bar shared by the staff pages: switch pages, go to the website, log out. */
+export function StaffBar({ current, loggedIn, onLogout }: { current: "poster" | "cycles"; loggedIn: boolean; onLogout: () => void }) {
+  const leave = () => clearStaffLogin(); // going to the website ends the staff login
+  return (
+    <header className="ps-head">
+      <a href="/" className="ps-brand" onClick={leave}>
+        <img src={brand.logo} alt="" /> {brand.fullName}
+      </a>
+      <nav className="staff-bar" aria-label="Staff pages">
+        {loggedIn && (
+          <>
+            <a href="/poster" className={current === "poster" ? "on" : ""} aria-current={current === "poster" ? "page" : undefined}>
+              Posters
+            </a>
+            <a href="/cycles" className={current === "cycles" ? "on" : ""} aria-current={current === "cycles" ? "page" : undefined}>
+              Cycles
+            </a>
+          </>
+        )}
+        <a href="/" className="btn btn-ghost btn-small" onClick={leave}>
+          Website ↗
+        </a>
+        {loggedIn && (
+          <button className="btn btn-ghost btn-small" onClick={onLogout}>
+            Log out
+          </button>
+        )}
+      </nav>
+    </header>
+  );
+}
+
+/** If the page is shown again with the back button after visiting the website, ask for the password. */
+export function useLoginGuard(setToken: (t: string | null) => void) {
+  useEffect(() => {
+    const check = () => {
+      if (!readToken()) setToken(null);
+    };
+    window.addEventListener("pageshow", check);
+    document.addEventListener("visibilitychange", check);
+    return () => {
+      window.removeEventListener("pageshow", check);
+      document.removeEventListener("visibilitychange", check);
+    };
+  }, [setToken]);
 }

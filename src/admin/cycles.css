@@ -1,6 +1,3 @@
-.cy-nav { display: flex; align-items: center; gap: 14px; }
-.cy-nav a { color: var(--muted); font-weight: 600; }
-.cy-nav a:hover { color: var(--text); }
 .cy-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
 .cy-title h1 { margin: 0; }
 .cy-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }

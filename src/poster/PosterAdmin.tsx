@@ -4,7 +4,7 @@ import { brand, heroBikes, products } from "../data/site";
 import { badgeFor, discounted, formatDay, inr, offerBikes, todayISO, type Festival, type OfferBike } from "../data/festival";
 import { DESIGNS, SIZES, drawPoster, loadImage, loadPosterFonts, type DesignId, type PosterInput, type PosterSize } from "./draw";
 import { PRESETS } from "./presets";
-import { Login, readToken, saveToken } from "../admin/auth";
+import { Login, StaffBar, readToken, saveToken, useLoginGuard } from "../admin/auth";
 import "./poster.css";
 
 const ORDER: PosterSize[] = ["square", "story", "wide"];
@@ -160,6 +160,7 @@ function posterData(size: PosterSize, design: DesignId, f: Festival, chosen: Off
 
 export default function PosterAdmin() {
   const [token, setToken] = useState<string | null>(readToken);
+  useLoginGuard(setToken);
   const [live, setLive] = useState<Festival | null>(null);
   const [step, setStep] = useState<"form" | "designs" | "done">("form");
   const [form, setForm] = useState<Form>(() => presetForm("diwali"));
@@ -311,16 +312,7 @@ export default function PosterAdmin() {
 
   return (
     <main className="ps">
-      <header className="ps-head">
-        <a href="/" className="ps-brand">
-          <img src={brand.logo} alt="" /> {brand.fullName}
-        </a>
-        {token && (
-          <button className="btn btn-ghost btn-small" onClick={logout}>
-            Log out
-          </button>
-        )}
-      </header>
+      <StaffBar current="poster" loggedIn={!!token} onLogout={logout} />
 
       <AnimatePresence>{!token && <Login onToken={(t) => (saveToken(t), setToken(t))} />}</AnimatePresence>
 
