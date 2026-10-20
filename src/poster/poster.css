@@ -1,0 +1,120 @@
+.ps { max-width: 1240px; margin: 0 auto; padding: 24px clamp(16px, 4vw, 48px) 96px; }
+.ps-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+.ps-brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; }
+.ps-brand img { width: 36px; height: 36px; border-radius: 50%; background: #fff; }
+.ps h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 18px; }
+.ps h2 { font-size: 1.6rem; margin-bottom: 6px; }
+.ps-help { color: var(--muted); margin-bottom: 18px; }
+.ps-sub { font-size: 1.2rem; margin: 30px 0 14px; }
+
+/* Login popup */
+.ps-overlay {
+  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(247, 148, 29, 0.18), transparent 60%), rgba(5, 5, 7, 0.88);
+  backdrop-filter: blur(10px);
+}
+.ps-login {
+  width: min(400px, 100%); display: grid; gap: 14px; justify-items: center; text-align: center; padding: 32px 28px;
+  border-radius: 24px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.ps-login img { width: 72px; height: 72px; border-radius: 50%; background: #fff; }
+.ps-login h1 { font-size: 1.7rem; margin: 0; }
+.ps-login p { color: var(--muted); font-size: 0.95rem; }
+.ps-login input { width: 100%; text-align: center; font-size: 1.1rem; letter-spacing: 0.1em; }
+.ps-login .btn { width: 100%; }
+.ps-back { color: var(--muted); font-size: 0.88rem; }
+
+/* Steps + status */
+.ps-steps { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 22px; margin-bottom: 22px; color: var(--muted); font-size: 0.92rem; }
+.ps-steps li { display: flex; align-items: center; gap: 8px; }
+.ps-steps span { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); font-weight: 600; }
+.ps-steps li.on { color: var(--text); }
+.ps-steps li.on span { background: var(--accent); color: #09090b; border-color: var(--accent); }
+.ps-live {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 16px; margin-bottom: 18px;
+  border-radius: 14px; background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.35);
+}
+.ps-live .btn { margin-left: auto; }
+.ps-dot { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2); }
+.ps-notice { padding: 10px 14px; border-radius: 12px; font-size: 0.92rem; margin: 6px 0 14px; }
+.ps-notice.error { color: #ffb4b4; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.35); }
+.ps-notice.ok { color: #b6f5c8; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.35); }
+
+/* Form */
+.ps-section { display: grid; gap: 16px; padding: clamp(18px, 3vw, 28px); border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+.ps-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ps-field { display: grid; gap: 8px; border: 0; min-width: 0; }
+.ps-label { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+.ps input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), .ps select, .ps textarea {
+  width: 100%; padding: 12px 14px; border-radius: 12px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--line); font: inherit; color-scheme: dark;
+}
+.ps input:focus, .ps select:focus, .ps textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ps textarea { resize: vertical; }
+.ps .gu { font-family: "Mukta Vaani", var(--body); font-size: 1.05rem; }
+.ps-seg { display: inline-flex; flex-wrap: wrap; gap: 6px; padding: 5px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); width: fit-content; }
+.ps-seg label { padding: 9px 16px; border-radius: 10px; cursor: pointer; color: var(--muted); }
+.ps-seg label.on { background: var(--accent); color: #09090b; font-weight: 600; }
+.ps-seg input { position: absolute; opacity: 0; pointer-events: none; }
+.ps-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.ps-types label {
+  display: grid; gap: 4px; padding: 14px 16px; border-radius: 14px; cursor: pointer;
+  background: var(--bg); border: 2px solid var(--line); transition: border-color 0.2s;
+}
+.ps-types label.on { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(247, 148, 29, 0.15); }
+.ps-types input { position: absolute; opacity: 0; pointer-events: none; }
+.ps-types strong { font-size: 1.02rem; }
+.ps-types span { color: var(--muted); font-size: 0.85rem; line-height: 1.45; }
+.ps-cycle-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; max-height: 460px; overflow: auto; padding: 2px; }
+.ps-cycle { display: grid; gap: 8px; padding: 8px 10px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); }
+.ps-cycle.on { border-color: var(--accent); }
+.ps-cycle label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.ps-cycle input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
+.ps-cycle img { width: 64px; height: 40px; object-fit: contain; border-radius: 6px; background: radial-gradient(ellipse at 50% 60%, #d9d9de, transparent 72%); flex: none; }
+.ps-cycle span { display: grid; min-width: 0; }
+.ps-cycle strong { font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ps-cycle small { color: var(--muted); font-size: 0.78rem; }
+.ps-bg-preview { display: flex; align-items: center; gap: 10px; }
+.ps-bg-preview img { width: 90px; height: 60px; object-fit: cover; border-radius: 8px; }
+.ps-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+
+/* Poster bikes picker */
+.ps-bikes { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.ps-bikes button {
+  position: relative; display: grid; gap: 3px; padding: 8px; border-radius: 12px; text-align: left;
+  background: var(--bg); border: 2px solid var(--line); transition: border-color 0.2s;
+}
+.ps-bikes button.on { border-color: var(--accent); }
+.ps-bikes img { width: 100%; aspect-ratio: 16 / 10; object-fit: contain; background: radial-gradient(ellipse at 50% 60%, #d9d9de, transparent 70%); border-radius: 8px; }
+.ps-bikes span { font-weight: 600; font-size: 0.85rem; }
+.ps-bikes small { color: var(--muted); font-size: 0.78rem; }
+.ps-bikes s { opacity: 0.7; }
+.ps-num { position: absolute; top: 6px; left: 6px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #09090b; font-size: 0.78rem !important; }
+
+/* Design choices */
+.ps-designs { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin-top: 8px; }
+.ps-design {
+  display: grid; gap: 6px; padding: 10px; border-radius: 18px; text-align: left; background: var(--bg);
+  border: 2px solid var(--line); transition: border-color 0.2s, transform 0.2s;
+}
+.ps-design:hover { transform: translateY(-3px); }
+.ps-design.on { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(247, 148, 29, 0.18); }
+.ps-design span { color: var(--muted); font-size: 0.82rem; }
+.ps canvas { width: 100%; height: auto; display: block; border-radius: 10px; background: #1a0a0e; }
+.ps-grid { display: grid; grid-template-columns: 1fr 0.62fr; gap: 16px; align-items: start; }
+.ps-wide { grid-column: 1 / -1; }
+.ps-story { grid-row: span 2; }
+.ps-card { margin: 0; padding: 12px; border-radius: 18px; background: var(--bg); border: 1px solid var(--line); }
+.ps-card figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+.ps-card figcaption div { display: grid; gap: 2px; }
+.ps-card figcaption span { color: var(--muted); font-size: 0.8rem; }
+.ps-done p { color: var(--muted); line-height: 1.6; }
+.ps-done strong { color: var(--text); }
+.ps-done-img { width: 100%; border-radius: 14px; }
+
+@media (max-width: 760px) {
+  .ps-row { grid-template-columns: 1fr; }
+  .ps-grid { grid-template-columns: 1fr; }
+  .ps-story { grid-row: auto; }
+  .ps-actions .btn { flex: 1; }
+}

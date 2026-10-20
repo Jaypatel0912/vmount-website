@@ -297,6 +297,80 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -0.03em; }
 }
 .hero-rating-star { color: #fbbc04; }
 
+/* Festival offer */
+.fest {
+  position: relative; overflow: hidden; padding: clamp(110px, 13vw, 150px) clamp(16px, 4vw, 48px) 64px;
+  background: radial-gradient(ellipse at 50% 30%, #5a1420 0%, #2a0710 55%, #12040a 100%);
+}
+.fest-bg { position: absolute; inset: 0; pointer-events: none; }
+.fest-toran { position: absolute; top: 0; left: 0; width: 100%; height: 90px; }
+.fest-rangoli { position: absolute; width: min(900px, 130vw); left: 50%; top: 40%; translate: -50% -50%; opacity: 0.2; }
+.fest-spark { position: absolute; border-radius: 50%; background: #ffd56b; box-shadow: 0 0 10px 2px rgba(255, 190, 80, 0.8); }
+.fest-inner { position: relative; max-width: 1240px; margin: 0 auto; text-align: center; }
+.fest-poster { display: block; margin: 0 auto 28px; max-width: 980px; }
+.fest-poster img { width: 100%; display: block; border-radius: 20px; border: 1px solid rgba(247, 192, 74, 0.45); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55); }
+.fest-sign { margin-top: 10px !important; color: #ffb86b !important; font-weight: 600; }
+.fest-cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 26px; }
+.fest-all { margin: 6px auto 14px !important; font-family: var(--display); font-size: 1.4rem !important; color: #ffd56b !important; }
+.fest-local {
+  display: block; font-family: "Mukta Vaani", var(--display); font-weight: 700; font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+  color: #ffd56b; text-shadow: 0 0 30px rgba(255, 170, 60, 0.6); line-height: 1.2;
+}
+.fest .eyebrow { color: #ffb86b; margin-top: 6px; }
+.fest h2 {
+  font-size: clamp(2.6rem, 7vw, 5.2rem); margin: 10px 0 12px; line-height: 1;
+  background: linear-gradient(180deg, #fff3c4, #f7c04a 55%, #e08a12); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.fest-head p { color: #f5d9b8; max-width: 640px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6; }
+.countdown { display: flex; gap: 10px; justify-content: center; margin: 26px 0 8px; }
+.countdown div { min-width: 76px; padding: 12px 8px; border-radius: 14px; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(247, 192, 74, 0.35); }
+.countdown strong { display: block; font-family: var(--display); font-size: 1.9rem; color: #ffd56b; }
+.countdown span { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: #e9c79a; }
+.fest-head .fest-until { font-size: 0.9rem; color: #e9c79a; margin-bottom: 18px; }
+.fest-extra {
+  display: inline-block; padding: 8px 16px; border-radius: 999px; background: rgba(247, 192, 74, 0.15);
+  border: 1px solid rgba(247, 192, 74, 0.4); color: #ffe2a0; font-weight: 600;
+}
+.fest-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 44px; text-align: left; }
+.fest-card {
+  position: relative; padding: 16px 18px 20px; border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 214, 120, 0.14), rgba(0, 0, 0, 0.35));
+  border: 1px solid rgba(247, 192, 74, 0.35);
+}
+.fest-img { border-radius: 16px; background: radial-gradient(ellipse 70% 65% at 50% 58%, #f3e3c4 0%, #c9a77a 50%, transparent 78%); padding: 14px 6px 4px; }
+.fest-img img { width: 100%; aspect-ratio: 16 / 10; object-fit: contain; display: block; filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.45)); }
+.fest-save {
+  position: absolute; top: 12px; right: 12px; z-index: 1; background: #e8233b; color: #fff; font-weight: 700; font-size: 0.8rem;
+  padding: 6px 11px; border-radius: 999px; box-shadow: 0 6px 20px rgba(232, 35, 59, 0.5);
+}
+.fest-cat { display: block; margin-top: 12px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #ffb86b; }
+.fest-card h3 { font-size: 1.35rem; margin: 2px 0 6px; }
+.fest-price s { color: #d8b48a; margin-right: 10px; }
+.fest-price strong { font-family: var(--display); font-size: 1.6rem; color: #ffd56b; }
+.fest-card .btn { margin-top: 14px; width: 100%; }
+.diyas { display: flex; justify-content: center; gap: clamp(14px, 4vw, 48px); margin-top: 48px; }
+.diya { width: 64px; height: 64px; overflow: visible; }
+.flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker 1.6s ease-in-out infinite alternate; }
+@keyframes flicker {
+  0% { transform: scale(1, 1) skewX(0deg); }
+  40% { transform: scale(0.92, 1.08) skewX(3deg); }
+  100% { transform: scale(1.06, 0.94) skewX(-3deg); }
+}
+.fest-terms { margin-top: 22px; color: #c9a27c; font-size: 0.82rem; }
+.fest-pill {
+  position: fixed; bottom: 16px; left: 50%; translate: -50% 0; z-index: 70; display: flex; align-items: center; gap: 10px;
+  padding: 8px 8px 8px 16px; border-radius: 999px; background: linear-gradient(90deg, #5a1420, #2a0710);
+  border: 1px solid rgba(247, 192, 74, 0.5); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55); color: #ffe2a0;
+  font-size: 0.9rem; white-space: nowrap; max-width: calc(100vw - 32px);
+}
+.fest-pill a { color: #ffd56b; font-weight: 700; }
+.fest-pill button { width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); flex: none; }
+.card-tag.is-offer { background: linear-gradient(90deg, #f7c04a, #f7941d); }
+.card-price { display: flex; flex-direction: column; line-height: 1.15; }
+.card-price s { color: var(--muted); font-size: 0.82rem; }
+.card-price strong.is-offer { font-family: var(--display); font-size: 1.3rem; color: #ffd56b; }
+@media (prefers-reduced-motion: reduce) { .flame { animation: none; } }
+
 /* Why */
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
 .stat { padding: 28px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
@@ -351,6 +425,7 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -0.03em; }
   .cta, .promo { grid-template-columns: 1fr; }
   .reels { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
   .ig-grid { grid-template-columns: repeat(2, 1fr); }
+  .fest-pill .fest-pill-time { display: none; }
   .ig-modal { grid-template-columns: 1fr; overflow-y: auto; }
   .ig-modal-media img, .ig-modal-media video { max-height: 60vh; }
   .nav nav { display: none; }

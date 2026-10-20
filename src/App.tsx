@@ -5,9 +5,20 @@ import Products from "./components/Products";
 import Showcase from "./components/Showcase";
 import { Promo } from "./components/Social";
 import InstagramFeed from "./components/InstagramFeed";
+import { FestivalPill, FestivalSection } from "./components/Festival";
+import { FestivalProvider, useFestival } from "./components/FestivalContext";
 import { Contact, Footer, Marquee, Nav, Reviews, Why } from "./components/Sections";
 
 export default function App() {
+  return (
+    <FestivalProvider>
+      <Site />
+    </FestivalProvider>
+  );
+}
+
+function Site() {
+  const { festival, offers } = useFestival();
   const [cart, setCart] = useState(0);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
@@ -19,6 +30,7 @@ export default function App() {
       <main>
         <Hero />
         <Marquee />
+        {festival && <FestivalSection f={festival} offers={[...offers.values()]} />}
         <Showcase />
         <Products onAdd={() => setCart((c) => c + 1)} />
         <Promo />
@@ -28,6 +40,7 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      {festival && <FestivalPill f={festival} />}
     </>
   );
 }

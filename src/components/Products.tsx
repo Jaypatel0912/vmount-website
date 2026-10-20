@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { brand, categories, products, waLink, type Product } from "../data/site";
 import BikeIllustration from "./BikeIllustration";
+import { useFestival } from "./FestivalContext";
 
 // Only show tabs for categories that have bikes
 const tabs = ["All", ...categories.filter((c) => products.some((p) => p.category === c))] as const;
@@ -10,6 +11,9 @@ const INITIAL = 8;
 const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
 
 function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
+  const { festival, offers } = useFestival();
+  const offer = offers.get(p.id);
+  const hasSaving = !!offer && offer.save > 0;
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
   const rotateY = useSpring(useTransform(mx, [0, 1], [-10, 10]), { stiffness: 200, damping: 20 });
@@ -36,7 +40,11 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
         my.set(0.5);
       }}
     >
-      {p.tag && <span className="card-tag">{p.tag}</span>}
+      {offer && festival ? (
+        <span className="card-tag is-offer">{festival.name} offer</span>
+      ) : (
+        p.tag && <span className="card-tag">{p.tag}</span>
+      )}
       <motion.div className="card-media" style={{ x: imgX }}>
         {p.image && !imgFailed ? (
           <img src={p.image} alt={p.name} loading="lazy" draggable={false} onError={() => setImgFailed(true)} />
@@ -53,7 +61,14 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: () => void }) {
           ))}
         </ul>
         <div className="card-foot">
-          <strong>{inr.format(p.price)}</strong>
+          {hasSaving ? (
+            <span className="card-price">
+              <s>{inr.format(p.price)}</s>
+              <strong className="is-offer">{inr.format(offer!.offerPrice)}</strong>
+            </span>
+          ) : (
+            <strong>{inr.format(p.price)}</strong>
+          )}
           <motion.a
             className="btn btn-small btn-wa"
             href={waLink(`Hi VMount, I'm interested in the ${p.name}. Is it available?`)}

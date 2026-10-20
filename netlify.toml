@@ -11,3 +11,19 @@
   for = "/admin/*"
   [headers.values]
     X-Robots-Tag = "noindex"
+
+# Poster maker page (same app, different screen; password-protected)
+[[redirects]]
+  from = "/poster"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/posters"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/poster*"
+  [headers.values]
+    X-Robots-Tag = "noindex"

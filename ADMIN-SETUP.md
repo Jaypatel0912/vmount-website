@@ -8,6 +8,8 @@ The website has a built-in admin panel at **`/admin`**. From it you can:
 
 When you click **Publish**, the change is saved and the website updates itself in about 1 minute.
 
+Festival offers and posters have their own page: **`/poster`** (see below).
+
 The setup below is done **once**. It needs two free accounts: **GitHub**, which stores the website files, and **Netlify**, which hosts the website.
 
 ---
@@ -89,3 +91,30 @@ Then open http://localhost:5173/admin/index.html. No login is needed, and change
 | Uploaded photos | `public/images/uploads/` |
 | Admin panel setup | `public/admin/config.yml` |
 | Instagram connection | `netlify/functions/instagram.mjs` |
+
+---
+
+## Festival offers and posters: `/poster`
+
+Open **`https://your-site/poster`** and enter the poster password. Then:
+
+1. **Offer details**: choose the festival (Diwali, Navratri, Uttarayan and more, or a custom name). Check the greeting, headline and description, then set the dates the offer shows on the website.
+2. Choose whether the offer is on **selected cycles** (tick them, and optionally type a special price for each) or on **all cycles**, and set the discount: rupees off, percent off, or gift only. You can add a free gift, small-print terms, and your own background image.
+3. Click **Create posters**. Pick one of the 4 designs and the bikes to show (up to 3). Download the Instagram post, story/WhatsApp status and wide banner.
+4. Click **Publish to website**. Within about 30 seconds the site shows the poster, the offer cards, offer prices in the shop and a small reminder. Everything switches off by itself after the end date.
+
+To change or stop an offer, open `/poster` again: **Edit offer** or **Remove from website**.
+To check an offer before its start date, open `https://your-site/?preview-offer`.
+
+### One-time setup: the poster password
+
+The password is checked by the server and is never stored in the website code.
+
+1. In Netlify, go to **Project configuration → Environment variables → Add a variable**.
+   - **Key:** `POSTER_PASSWORD`
+   - **Value:** your password
+2. Optional, for extra safety: add `POSTER_SECRET` with any long random text.
+3. Go to **Deploys → Trigger deploy → Deploy site**.
+
+To change the password later, edit `POSTER_PASSWORD` and redeploy. Anyone still logged in is logged out automatically.
+When testing on your computer, the password is read from `.env.local`, which is never uploaded.
