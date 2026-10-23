@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { allProducts, brand, categories, type Category, type Product } from "../data/site";
+import { allProducts, brand, cycleTypes, type Category, type CycleType, type Product } from "../data/site";
+import TypesPanel from "./TypesPanel";
 import { Login, StaffBar, readToken, saveToken, useLoginGuard } from "./auth";
 import { preparePhoto } from "./photo";
 import "./cycles.css";
@@ -29,10 +30,10 @@ type Draft = {
   visible: boolean;
 };
 
-const emptyDraft = (): Draft => ({
+const emptyDraft = (category = "Mountain"): Draft => ({
   id: "",
   name: "",
-  category: "Mountain",
+  category,
   price: "",
   stock: "",
   image: "",
@@ -82,6 +83,8 @@ export default function CycleAdmin() {
   const [token, setToken] = useState<string | null>(readToken);
   useLoginGuard(setToken);
   const [cycles, setCycles] = useState<Product[]>(() => [...allProducts]);
+  const [types, setTypes] = useState<CycleType[]>(() => cycleTypes.map((t) => ({ ...t })));
+  const [view, setView] = useState<"cycles" | "types">("cycles");
   const [editing, setEditing] = useState<{ draft: Draft; isNew: boolean; originalId?: string } | null>(null);
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState<"All" | Category>("All");
@@ -108,14 +111,14 @@ export default function CycleAdmin() {
     setToken(null);
   };
 
-  /** Save the whole list to the server. */
-  const save = async (next: Product[], message: string) => {
+  /** Save the whole list (and the type list) to the server. */
+  const save = async (next: Product[], message: string, nextTypes: CycleType[] = types) => {
     setBusy("Saving…");
     try {
       const r = await fetch("/api/cycles", {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ cycles: next }),
+        body: JSON.stringify({ cycles: next, types: nextTypes }),
       });
       const body = await r.json().catch(() => ({}));
       if (r.status === 401) {
@@ -124,6 +127,7 @@ export default function CycleAdmin() {
       }
       if (!r.ok) throw new Error(body.error || "Saving failed");
       setCycles(body.cycles);
+      if (Array.isArray(body.types)) setTypes(body.types);
       setToast({ kind: "ok", text: `${message} The website shows it within a minute.` });
       return true;
     } catch (e) {
@@ -185,11 +189,34 @@ export default function CycleAdmin() {
       {token && (
         <>
           <div className="cy-title">
-            <h1>Cycles</h1>
-            <button className="btn btn-primary" onClick={() => setEditing({ draft: emptyDraft(), isNew: true })} disabled={!!busy}>
-              + Add new cycle
-            </button>
+            <div className="cy-views" role="tablist" aria-label="Manage">
+              <button role="tab" aria-selected={view === "cycles"} className={view === "cycles" ? "on" : ""} onClick={() => setView("cycles")}>
+                Cycles <span>{cycles.length}</span>
+              </button>
+              <button role="tab" aria-selected={view === "types"} className={view === "types" ? "on" : ""} onClick={() => setView("types")}>
+                Types <span>{types.length}</span>
+              </button>
+            </div>
+            {view === "cycles" && (
+              <button className="btn btn-primary" onClick={() => setEditing({ draft: emptyDraft(types[0]?.name), isNew: true })} disabled={!!busy}>
+                + Add new cycle
+              </button>
+            )}
           </div>
+
+          {view === "types" && (
+            <TypesPanel
+              types={types}
+              cycles={cycles}
+              token={token}
+              busy={busy}
+              onExpired={logout}
+              onSave={(nextTypes, nextCycles, message) => save(nextCycles, message, nextTypes)}
+            />
+          )}
+
+          {view === "cycles" && (
+          <>
 
           <div className="cy-stats">
             <span>
@@ -208,10 +235,10 @@ export default function CycleAdmin() {
 
           <div className="cy-filters">
             <input type="search" placeholder="Search by name…" aria-label="Search cycles" value={query} onChange={(e) => setQuery(e.target.value)} />
-            <select value={cat} onChange={(e) => setCat(e.target.value as typeof cat)} aria-label="Filter by category">
-              <option value="All">All categories</option>
-              {categories.map((c) => (
-                <option key={c}>{c}</option>
+            <select value={cat} onChange={(e) => setCat(e.target.value as typeof cat)} aria-label="Filter by type">
+              <option value="All">All types</option>
+              {types.map((t) => (
+                <option key={t.id}>{t.name}</option>
               ))}
             </select>
           </div>
@@ -260,12 +287,16 @@ export default function CycleAdmin() {
             {!shown.length && <li className="cy-empty">No cycles match your search.</li>}
           </ul>
 
+          </>
+          )}
+
           <AnimatePresence>
             {editing && (
               <CycleForm
                 key="form"
                 initial={editing.draft}
                 isNew={editing.isNew}
+                categories={types.map((t) => t.name)}
                 taken={new Set(cycles.filter((c) => c.id !== editing.originalId).map((c) => c.id))}
                 token={token}
                 busy={busy}
@@ -300,6 +331,7 @@ export default function CycleAdmin() {
 
 function CycleForm(props: {
   initial: Draft;
+  categories: string[];
   isNew: boolean;
   taken: Set<string>;
   token: string;
@@ -308,7 +340,7 @@ function CycleForm(props: {
   onExpired: () => void;
   onSave: (p: Product) => void;
 }) {
-  const { initial, isNew, taken, token, busy, onCancel, onExpired, onSave } = props;
+  const { initial, categories, isNew, taken, token, busy, onCancel, onExpired, onSave } = props;
   const [d, setD] = useState<Draft>(initial);
   const [idTouched, setIdTouched] = useState(!isNew);
   const [cutOut, setCutOut] = useState(true);
@@ -427,7 +459,7 @@ function CycleForm(props: {
             </label>
             <div className="ps-row">
               <label className="ps-field">
-                <span className="ps-label">Category *</span>
+                <span className="ps-label">Type *</span>
                 <select value={d.category} onChange={(e) => set("category", e.target.value as Category)}>
                   {categories.map((c) => (
                     <option key={c}>{c}</option>

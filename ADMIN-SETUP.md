@@ -133,3 +133,15 @@ Open **`https://your-site/cycles`**, or click the small **Cycles** link at the b
 
 Changes appear on the website within about a minute, with no code change or GitHub upload needed.
 The first time you save on `/cycles`, the saved list replaces the built-in list in `src/content/products.json`.
+
+### Cycle types (Shop by type)
+
+The website's shop starts with one big card per cycle type. Clicking a card opens that type's cycles; **All cycles** shows everything.
+Manage the types on `/cycles` → **Types**:
+
+- **Add new type**: enter the name, a short description and the card colour. A cover photo is optional; without one, a cycle of that type is shown on the card.
+- **Edit**: renaming a type moves its cycles to the new name automatically.
+- **↑ / ↓**: set the order of the cards on the website.
+- **Delete**: only possible when no cycles use that type.
+
+Types with no visible cycles are not shown on the website. When adding or editing a cycle, pick its type in the **Type** field.

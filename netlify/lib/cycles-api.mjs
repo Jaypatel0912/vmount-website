@@ -7,14 +7,15 @@
 import { randomBytes } from "node:crypto";
 import { decodeImage, isAuthorized, json, notConfigured } from "./auth.mjs";
 
-const CATEGORIES = ["Mountain", "Road", "City", "Hybrid", "Electric", "Kids"];
+const DEFAULT_CATEGORIES = ["Mountain", "Road", "City", "Hybrid", "Electric", "Kids"];
+const MAX_TYPES = 30;
 const MAX_CYCLES = 300;
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 
 const text = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
 /** Validate one cycle. Returns [cycle, error]. */
-function cleanCycle(c, i) {
+function cleanCycle(c, i, CATEGORIES) {
   const where = `Cycle ${i + 1}${c?.name ? ` (${String(c.name).slice(0, 40)})` : ""}`;
   if (!c || typeof c !== "object") return [null, `${where}: invalid`];
   const id = text(c.id, 60).toLowerCase();
@@ -24,7 +25,7 @@ function cleanCycle(c, i) {
   const stock = c.stock === null || c.stock === "" || c.stock === undefined ? null : Math.round(Number(c.stock));
   if (!/^[a-z0-9-]+$/.test(id)) return [null, `${where}: the ID may only use lowercase letters, numbers and dashes`];
   if (!name) return [null, `${where}: name is required`];
-  if (!CATEGORIES.includes(c.category)) return [null, `${where}: choose a category`];
+  if (!CATEGORIES.includes(c.category)) return [null, `${where}: choose a type (category)`];
   if (!Number.isFinite(price) || price < 0 || price > 10000000) return [null, `${where}: enter a valid price`];
   if (stock !== null && (!Number.isFinite(stock) || stock < 0 || stock > 100000)) return [null, `${where}: stock must be 0 or more`];
   if (!/^\/(images|api\/cycles\/image)\//.test(image)) return [null, `${where}: add a photo`];
@@ -44,6 +45,33 @@ function cleanCycle(c, i) {
     },
     null,
   ];
+}
+
+/** Validate the list of cycle types. Returns [types, error]. */
+function cleanTypes(list) {
+  if (!Array.isArray(list) || !list.length) return [null, "Add at least one cycle type"];
+  if (list.length > MAX_TYPES) return [null, `At most ${MAX_TYPES} cycle types`];
+  const out = [];
+  const ids = new Set();
+  const names = new Set();
+  for (const [i, t] of list.entries()) {
+    const name = text(t?.name, 40);
+    const id = text(t?.id, 50).toLowerCase() || name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    if (!name) return [null, `Type ${i + 1}: name is required`];
+    if (!/^[a-z0-9-]+$/.test(id)) return [null, `Type "${name}": invalid ID`];
+    if (ids.has(id) || names.has(name.toLowerCase())) return [null, `Two types are both called "${name}"`];
+    ids.add(id);
+    names.add(name.toLowerCase());
+    const image = text(t?.image, 300);
+    out.push({
+      id,
+      name,
+      description: text(t?.description, 140),
+      color: /^#[0-9a-fA-F]{6}$/.test(t?.color) ? t.color : "#f7941d",
+      ...(image && /^\/(images|api\/cycles\/image)\//.test(image) ? { image } : {}),
+    });
+  }
+  return [out, null];
 }
 
 export async function handleCycles(req, store, env) {
@@ -83,17 +111,25 @@ export async function handleCycles(req, store, env) {
   if (path === "/api/cycles" && req.method === "PUT") {
     const body = await req.json().catch(() => null);
     if (!Array.isArray(body?.cycles)) return json({ error: "Missing cycle list" }, 400);
+    const previous = await store.getJSON("catalog");
+    let types = previous?.types ?? null;
+    if (body.types !== undefined) {
+      const [clean, error] = cleanTypes(body.types);
+      if (error) return json({ error }, 400);
+      types = clean;
+    }
+    const CATEGORIES = types ? types.map((t) => t.name) : DEFAULT_CATEGORIES;
     if (body.cycles.length > MAX_CYCLES) return json({ error: `At most ${MAX_CYCLES} cycles` }, 400);
     const cycles = [];
     const ids = new Set();
     for (const [i, c] of body.cycles.entries()) {
-      const [clean, error] = cleanCycle(c, i);
+      const [clean, error] = cleanCycle(c, i, CATEGORIES);
       if (error) return json({ error }, 400);
       if (ids.has(clean.id)) return json({ error: `Two cycles use the ID "${clean.id}"` }, 400);
       ids.add(clean.id);
       cycles.push(clean);
     }
-    const saved = { cycles, updatedAt: new Date().toISOString() };
+    const saved = { cycles, types, updatedAt: new Date().toISOString() };
     await store.setJSON("catalog", saved);
     return json(saved);
   }

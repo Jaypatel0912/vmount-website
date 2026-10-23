@@ -374,6 +374,64 @@ h1, h2, h3 { font-family: var(--display); letter-spacing: -0.03em; }
   color: rgba(161, 161, 170, 0.55); transition: color 0.2s, border-color 0.2s;
 }
 .staff-links a:hover { color: var(--text); border-color: var(--accent); }
+/* Shop by type */
+.type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; perspective: 1400px; }
+.type-card {
+  position: relative; overflow: hidden; display: grid; align-content: end; min-height: 340px; padding: 24px; text-align: left;
+  border-radius: 26px; border: 1px solid color-mix(in srgb, var(--type) 35%, var(--line)); transform-style: preserve-3d;
+  background:
+    radial-gradient(ellipse 90% 70% at 70% 30%, color-mix(in srgb, var(--type) 30%, transparent), transparent 70%),
+    linear-gradient(160deg, color-mix(in srgb, var(--type) 14%, var(--surface-2)), var(--surface) 70%);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.type-card:hover { border-color: var(--type); box-shadow: 0 24px 60px -24px color-mix(in srgb, var(--type) 70%, transparent); }
+.type-card:focus-visible { outline: 3px solid var(--type); outline-offset: 3px; }
+.type-glow {
+  position: absolute; width: 70%; aspect-ratio: 1; right: -10%; top: -20%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--type) 45%, transparent), transparent 65%); filter: blur(20px);
+  opacity: 0.6; transition: opacity 0.3s;
+}
+.type-card:hover .type-glow { opacity: 1; }
+.type-word {
+  position: absolute; top: 6px; left: 18px; right: 0; pointer-events: none; white-space: nowrap; overflow: hidden;
+  font-family: var(--display); font-weight: 700; font-size: clamp(4rem, 9vw, 6rem); line-height: 1; letter-spacing: -0.04em;
+  color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--type) 40%, transparent);
+}
+.type-bike {
+  position: absolute; top: 46px; left: 50%; width: 82%; max-height: 190px; translate: -50% 0; object-fit: contain; pointer-events: none;
+  filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.55)); transition: scale 0.4s; transform: translateZ(40px);
+}
+.type-card:hover .type-bike { scale: 1.06; }
+.type-info { position: relative; display: grid; gap: 6px; transform: translateZ(30px); }
+.type-info strong { font-family: var(--display); font-size: 1.9rem; letter-spacing: -0.02em; }
+.type-desc { color: var(--muted); font-size: 0.92rem; line-height: 1.45; max-width: 90%; }
+.type-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.type-meta span { padding: 5px 11px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--line); }
+.type-meta span:last-child { color: var(--type); border-color: color-mix(in srgb, var(--type) 45%, transparent); }
+.type-go {
+  position: absolute; right: 20px; bottom: 22px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--type); color: #09090b; font-weight: 700; font-size: 1.2rem; transition: transform 0.3s;
+}
+.type-card:hover .type-go { transform: translateX(4px); }
+.type-offer {
+  position: absolute; top: 16px; right: 16px; z-index: 1; padding: 6px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;
+  background: linear-gradient(90deg, #f7c04a, #f7941d); color: #09090b;
+}
+.type-head { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-bottom: 20px; }
+.type-head-title { display: flex; align-items: center; gap: 16px; }
+.type-head-title img {
+  width: 120px; height: 76px; object-fit: contain; border-radius: 14px; padding: 6px;
+  background: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--type) 35%, #1c1c21), var(--surface));
+}
+.type-head-title h3 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0; color: var(--type); }
+.type-head-title span { color: var(--muted); font-size: 0.92rem; }
+.type-chips { margin-bottom: 28px; }
+@media (max-width: 520px) {
+  .type-grid { grid-template-columns: 1fr; }
+  .type-card { min-height: 300px; }
+  .type-head-title img { width: 90px; height: 58px; }
+}
+
 .card-tag.is-offer { background: linear-gradient(90deg, #f7c04a, #f7941d); }
 .card-price { display: flex; flex-direction: column; line-height: 1.15; }
 .card-price s { color: var(--muted); font-size: 0.82rem; }
