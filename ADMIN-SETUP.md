@@ -144,4 +144,9 @@ Manage the types on `/cycles` → **Types**:
 - **↑ / ↓**: set the order of the cards on the website.
 - **Delete**: only possible when no cycles use that type.
 
-Types with no visible cycles are not shown on the website. When adding or editing a cycle, pick its type in the **Type** field.
+- **Group** (optional): types with the same group share one card on the website. For example, the **Kids & Toys** card opens Walker, Tricycle, Rider, Panda, Kick bike, Jeep, Bike and Scooty.
+- **Icon** (optional emoji): shown on the card until the type has products with photos.
+
+A type with no products shows "Coming soon" with a WhatsApp enquiry button if it has an icon or a cover photo; otherwise it is hidden. When adding or editing a cycle or toy, pick its type in the **Type** field.
+
+Note: the "Phoenix Road" bike is hidden from the website because its frame is not VMount-branded. Show it again on `/cycles` if you sell it.

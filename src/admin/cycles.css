@@ -9,6 +9,9 @@
 .ty-thumb { width: 110px; height: 68px; border-radius: 12px; display: grid; place-items: center; color: var(--muted); font-size: 0.75rem;
   background: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--type) 40%, #1c1c21), var(--bg)); }
 .ty-thumb img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.ty-icon { font-size: 34px; line-height: 1; }
+.ty-icon-big { font-size: 96px; line-height: 1; }
+.ty-group { font-style: normal; font-size: 0.72rem; font-weight: 600; padding: 2px 8px; margin-left: 8px; border-radius: 999px; background: var(--bg); color: var(--muted); border: 1px solid var(--line); vertical-align: 2px; }
 .ty-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--type); margin-right: 4px; }
 .ty-preview { background: radial-gradient(ellipse at 50% 60%, color-mix(in srgb, var(--type) 45%, #2a2a30), #121214 75%) !important; }
 .cy-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }

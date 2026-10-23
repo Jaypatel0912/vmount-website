@@ -68,6 +68,8 @@ function cleanTypes(list) {
       name,
       description: text(t?.description, 140),
       color: /^#[0-9a-fA-F]{6}$/.test(t?.color) ? t.color : "#f7941d",
+      ...(text(t?.icon, 8) ? { icon: text(t.icon, 8) } : {}),
+      ...(text(t?.group, 40) ? { group: text(t.group, 40) } : {}),
       ...(image && /^\/(images|api\/cycles\/image)\//.test(image) ? { image } : {}),
     });
   }

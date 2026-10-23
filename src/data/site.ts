@@ -25,16 +25,28 @@ export type CycleType = {
   color: string;
   /** Optional cover photo; otherwise a cycle of this type is used. */
   image?: string;
+  /** Big emoji shown on the card when there is no photo yet (e.g. 🐼). */
+  icon?: string;
+  /** Types with the same group appear inside one group card (e.g. "Kids & Toys"). */
+  group?: string;
 };
 export type Category = string;
 
 export const DEFAULT_TYPES: CycleType[] = [
   { id: "mountain", name: "Mountain", description: "Built for rough roads, trails and weekend adventures.", color: "#3ddc84" },
-  { id: "road", name: "Road", description: "Lightweight speed machines with drop bars and 700C wheels.", color: "#f7941d" },
+  { id: "road", name: "Road", description: "Lightweight speed machines with drop bars and 700C wheels.", color: "#f7941d", image: "/images/bikes/bike-20230609-WA0001.webp" },
   { id: "city", name: "City", description: "Comfortable everyday rides for school, work and the market.", color: "#3aa0ff" },
   { id: "hybrid", name: "Hybrid", description: "Road speed and city comfort in one bike.", color: "#c084fc" },
   { id: "electric", name: "Electric", description: "Pedal-assist e-bikes that make every ride effortless.", color: "#2ee6c5" },
-  { id: "kids", name: "Kids", description: "Safe, fun first bikes for little riders.", color: "#ffd23d" },
+  // Kids & Toys group
+  { id: "walker", name: "Walker", group: "Kids & Toys", icon: "👶", color: "#ff8fb1", description: "Baby walkers that help little ones take their first steps safely." },
+  { id: "tricycle", name: "Tricycle", group: "Kids & Toys", icon: "🚲", color: "#ffb020", description: "Sturdy three-wheelers for toddlers, with handle and hood options." },
+  { id: "rider", name: "Rider", group: "Kids & Toys", icon: "🐎", color: "#7cd67c", description: "Ride-on toys little ones push along with their feet." },
+  { id: "panda", name: "Panda", group: "Kids & Toys", icon: "🐼", color: "#b8c4d6", description: "Cute panda ride-ons, a toddler favourite." },
+  { id: "kick-bike", name: "Kick bike", group: "Kids & Toys", icon: "🛴", color: "#3aa0ff", description: "Kick scooters for balance, speed and outdoor fun." },
+  { id: "jeep", name: "Jeep", group: "Kids & Toys", icon: "🚙", color: "#22c55e", description: "Battery-operated jeeps for little drivers." },
+  { id: "kids-bike", name: "Bike", group: "Kids & Toys", icon: "🏍️", color: "#ef4444", description: "Battery-operated kids motorbikes." },
+  { id: "scooty", name: "Scooty", group: "Kids & Toys", icon: "🛵", color: "#c084fc", description: "Battery-operated scooties for young riders." },
 ];
 
 /** All cycle types in display order (including ones with no cycles yet). */
@@ -102,6 +114,34 @@ export const slugify = (s: string) =>
 
 /** Cycles of one type that are shown on the website. */
 export const cyclesOfType = (t: CycleType) => products.filter((p) => p.category === t.name);
+
+/** A type is shown on the website if it has cycles, or an icon/cover to show while stock is coming. */
+export const isShownType = (t: CycleType) => cyclesOfType(t).length > 0 || !!t.icon || !!t.image;
+
+export type ShopEntry =
+  | { kind: "type"; id: string; type: CycleType }
+  | { kind: "group"; id: string; name: string; types: CycleType[] };
+
+/** Top level of "Shop by type": ungrouped types, plus one card per group (at its first type's position). */
+export function shopEntries(): ShopEntry[] {
+  const out: ShopEntry[] = [];
+  const groups = new Map<string, Extract<ShopEntry, { kind: "group" }>>();
+  for (const t of cycleTypes) {
+    if (!isShownType(t)) continue;
+    if (!t.group) {
+      out.push({ kind: "type", id: t.id, type: t });
+      continue;
+    }
+    let g = groups.get(t.group);
+    if (!g) {
+      g = { kind: "group", id: `group-${slugify(t.group)}`, name: t.group, types: [] };
+      groups.set(t.group, g);
+      out.push(g);
+    }
+    g.types.push(t);
+  }
+  return out;
+}
 
 /** Cover photo for a type card: its own photo, else a showroom cycle, else any in-stock cycle of that type. */
 export function typeCover(t: CycleType) {

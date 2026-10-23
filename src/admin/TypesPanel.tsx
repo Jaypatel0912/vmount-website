@@ -43,7 +43,7 @@ export default function TypesPanel({ types, cycles, token, busy, onSave, onExpir
   return (
     <>
       <p className="ps-help">
-        Types are the big cards in “Shop by type” on the website, in this order. Types with no visible cycles are not shown there.
+        Types are the big cards in “Shop by type” on the website, in this order. Types with the same group share one card. A type with no products is shown as “Coming soon” only if it has an icon or cover photo.
       </p>
       <ul className="cy-list ty-list">
         {types.map((t, i) => {
@@ -51,10 +51,13 @@ export default function TypesPanel({ types, cycles, token, busy, onSave, onExpir
           const cover = coverOf(t, cycles);
           return (
             <motion.li key={t.id} layout style={{ ["--type" as string]: t.color }}>
-              <span className="ty-thumb">{cover ? <img src={cover} alt="" loading="lazy" /> : <span>No photo</span>}</span>
+              <span className="ty-thumb">
+                {cover ? <img src={cover} alt="" loading="lazy" /> : t.icon ? <span className="ty-icon">{t.icon}</span> : <span>No photo</span>}
+              </span>
               <div className="cy-info">
                 <strong>
                   <span className="ty-dot" aria-hidden /> {t.name}
+                  {t.group && <em className="ty-group">{t.group}</em>}
                 </strong>
                 <span>
                   {n} {n === 1 ? "cycle" : "cycles"}
@@ -109,6 +112,7 @@ export default function TypesPanel({ types, cycles, token, busy, onSave, onExpir
             initial={editing.t}
             isNew={editing.isNew}
             takenNames={new Set(types.filter((t) => t.name !== editing.originalName).map((t) => t.name.toLowerCase()))}
+            groups={[...new Set(types.map((t) => t.group).filter((g): g is string => !!g))]}
             autoCover={coverOf({ ...editing.t, image: undefined }, cycles)}
             token={token}
             busy={busy}
@@ -142,6 +146,7 @@ function TypeForm(props: {
   initial: CycleType;
   isNew: boolean;
   takenNames: Set<string>;
+  groups: string[];
   autoCover?: string;
   token: string;
   busy: string | null;
@@ -149,7 +154,7 @@ function TypeForm(props: {
   onExpired: () => void;
   onSave: (t: CycleType) => void;
 }) {
-  const { initial, isNew, takenNames, autoCover, token, busy, onCancel, onExpired, onSave } = props;
+  const { initial, isNew, takenNames, groups, autoCover, token, busy, onCancel, onExpired, onSave } = props;
   const [t, setT] = useState<CycleType>(initial);
   const [cutOut, setCutOut] = useState(true);
   const [file, setFile] = useState<File | null>(null);
@@ -191,7 +196,9 @@ function TypeForm(props: {
     const name = t.name.trim();
     if (!name) return setError("Enter the type name.");
     if (takenNames.has(name.toLowerCase())) return setError(`There is already a type called "${name}".`);
-    onSave({ ...t, name, description: t.description.trim(), ...(t.image ? {} : { image: undefined }) });
+    const group = (t.group ?? "").trim();
+    const icon = (t.icon ?? "").trim();
+    onSave({ ...t, name, description: t.description.trim(), group: group || undefined, icon: icon || undefined, ...(t.image ? {} : { image: undefined }) });
   };
 
   const cover = t.image || autoCover;
@@ -220,7 +227,15 @@ function TypeForm(props: {
         <div className="cy-form-grid">
           <div className="cy-photo">
             <div className="cy-photo-box ty-preview" style={{ ["--type" as string]: t.color }}>
-              {uploading ? <span>Cleaning photo…</span> : cover ? <img src={cover} alt="Type cover" /> : <span>No photo yet</span>}
+              {uploading ? (
+                <span>Cleaning photo…</span>
+              ) : cover ? (
+                <img src={cover} alt="Type cover" />
+              ) : t.icon ? (
+                <span className="ty-icon-big">{t.icon}</span>
+              ) : (
+                <span>No photo yet</span>
+              )}
             </div>
             <label className="btn btn-ghost btn-small cy-file">
               {t.image ? "Change cover photo" : "Upload cover photo"}
@@ -252,7 +267,7 @@ function TypeForm(props: {
                 Use a cycle photo instead
               </button>
             ) : (
-              <small>Optional. Without a cover photo, a cycle of this type is shown.</small>
+              <small>Optional. Without a cover photo, a product of this type is shown, or the icon if there are none yet.</small>
             )}
           </div>
 
@@ -271,6 +286,28 @@ function TypeForm(props: {
                 placeholder="One line about this type, shown on the card"
               />
             </label>
+            <div className="ps-row">
+              <label className="ps-field">
+                <span className="ps-label">Group (optional)</span>
+                <input
+                  list="type-groups"
+                  maxLength={40}
+                  value={t.group ?? ""}
+                  onChange={(e) => setT((x) => ({ ...x, group: e.target.value }))}
+                  placeholder="e.g. Kids & Toys"
+                />
+                <datalist id="type-groups">
+                  {groups.map((g) => (
+                    <option key={g} value={g} />
+                  ))}
+                </datalist>
+              </label>
+              <label className="ps-field">
+                <span className="ps-label">Icon (optional emoji)</span>
+                <input maxLength={8} value={t.icon ?? ""} onChange={(e) => setT((x) => ({ ...x, icon: e.target.value }))} placeholder="e.g. 🛴" />
+              </label>
+            </div>
+            <small className="ps-help">Types with the same group are shown together inside one card on the website.</small>
             <label className="ps-field">
               <span className="ps-label">Card colour</span>
               <input type="color" className="cy-color" value={t.color} onChange={(e) => setT((x) => ({ ...x, color: e.target.value }))} />

@@ -297,6 +297,7 @@ export default function CycleAdmin() {
                 initial={editing.draft}
                 isNew={editing.isNew}
                 categories={types.map((t) => t.name)}
+                typeGroups={types.map((t) => t.group ?? "")}
                 taken={new Set(cycles.filter((c) => c.id !== editing.originalId).map((c) => c.id))}
                 token={token}
                 busy={busy}
@@ -332,6 +333,8 @@ export default function CycleAdmin() {
 function CycleForm(props: {
   initial: Draft;
   categories: string[];
+  /** Group of each category, same order ("" = no group). */
+  typeGroups: string[];
   isNew: boolean;
   taken: Set<string>;
   token: string;
@@ -340,7 +343,7 @@ function CycleForm(props: {
   onExpired: () => void;
   onSave: (p: Product) => void;
 }) {
-  const { initial, categories, isNew, taken, token, busy, onCancel, onExpired, onSave } = props;
+  const { initial, categories, typeGroups, isNew, taken, token, busy, onCancel, onExpired, onSave } = props;
   const [d, setD] = useState<Draft>(initial);
   const [idTouched, setIdTouched] = useState(!isNew);
   const [cutOut, setCutOut] = useState(true);
@@ -461,8 +464,11 @@ function CycleForm(props: {
               <label className="ps-field">
                 <span className="ps-label">Type *</span>
                 <select value={d.category} onChange={(e) => set("category", e.target.value as Category)}>
-                  {categories.map((c) => (
-                    <option key={c}>{c}</option>
+                  {categories.map((c, i) => (!typeGroups[i] ? <option key={c}>{c}</option> : null))}
+                  {[...new Set(typeGroups.filter(Boolean))].map((g) => (
+                    <optgroup key={g} label={g}>
+                      {categories.map((c, i) => (typeGroups[i] === g ? <option key={c}>{c}</option> : null))}
+                    </optgroup>
                   ))}
                 </select>
               </label>

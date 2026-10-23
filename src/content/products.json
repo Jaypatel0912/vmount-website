@@ -29,8 +29,8 @@
         "Drop bar",
         "14-speed"
       ],
-      "featured": true,
-      "visible": true
+      "featured": false,
+      "visible": false
     },
     {
       "id": "velocity",
