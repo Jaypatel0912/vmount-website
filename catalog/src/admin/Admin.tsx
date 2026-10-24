@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { allGroups, allProducts, inr, setGroups, setProducts, type Group, type Product } from "../data";
+import { allGroups, allProducts, inr, photosOf, setGroups, setProducts, type Group, type Product } from "../data";
+
+const MAX_PHOTOS = 10;
 import { AuthError, api, readToken, saveToken, slug, uploadPhoto } from "./api";
 import CollectionsPanel from "./CollectionsPanel";
 import Login from "./Login";
@@ -142,7 +144,7 @@ export default function Admin() {
           {(["products", "collections"] as const).map((t) => (
             <button key={t} type="button" role="tab" aria-selected={tab === t} className={tab === t ? "is-on" : ""} onClick={() => setTab(t)}>
               {tab === t && <motion.span layoutId="ad-tab-pill" className="ad-tab-pill" transition={{ type: "spring", bounce: 0.2, visualDuration: 0.3 }} />}
-              <span>{t === "products" ? `Products (${items.length})` : `Collections (${cols.reduce((n, g) => n + g.catalogues.length, 0)})`}</span>
+              <span>{t === "products" ? `Products (${items.length})` : `Sections (${cols.length})`}</span>
             </button>
           ))}
         </div>
@@ -179,8 +181,8 @@ export default function Admin() {
           <label className="search">
             <input type="search" placeholder="Search products…" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search products" />
           </label>
-          <select value={cat} onChange={(e) => setCat(e.target.value)} aria-label="Collection">
-            <option value="all">All collections</option>
+          <select value={cat} onChange={(e) => setCat(e.target.value)} aria-label="Sub-section">
+            <option value="all">All sub-sections</option>
             {cols.map((g) => (
               <optgroup key={g.id} label={g.title}>
                 {g.catalogues.map((c) => (
@@ -222,6 +224,7 @@ export default function Admin() {
               <motion.li key={p.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, x: -30 }} className={p.visible === false ? "is-hidden" : ""}>
                 <button type="button" className="ad-thumb" onClick={() => setEditing({ p: { ...p }, isNew: false })} aria-label={`Edit ${p.name}`}>
                   <img src={p.image} alt="" loading="lazy" />
+                  {photosOf(p).length > 1 && <em className="ad-thumb-count">📷 {photosOf(p).length}</em>}
                 </button>
                 <div className="ad-info">
                   <strong>{p.name}</strong>
@@ -342,11 +345,31 @@ function Editor(props: {
     return () => document.removeEventListener("keydown", onKey);
   }, [busy, onClose]);
 
-  const upload = async (file: File) => {
+  const photos = photosOf(p);
+  const setPhotos = (list: string[]) => set({ images: list, image: list[0] ?? "" });
+  const movePhoto = (i: number, to: number) => {
+    const list = [...photos];
+    const [x] = list.splice(i, 1);
+    list.splice(to, 0, x);
+    setPhotos(list);
+  };
+
+  // Upload one or more photos, one after another, adding each as it finishes
+  const upload = async (files: File[]) => {
     setError(null);
-    setBusy(cutOut ? "Cleaning photo…" : "Preparing photo…");
+    const room = MAX_PHOTOS - photos.length;
+    const take = files.slice(0, Math.max(room, 0));
+    if (files.length > take.length) setError(`A product can have up to ${MAX_PHOTOS} photos — ${files.length - take.length} not added.`);
     try {
-      set({ image: await uploadPhoto(file, cutOut, p.name || "product", token) });
+      for (const [i, file] of take.entries()) {
+        const n = take.length > 1 ? ` ${i + 1} of ${take.length}` : "";
+        setBusy(cutOut ? `Cleaning photo${n}…` : `Uploading photo${n}…`);
+        const url = await uploadPhoto(file, cutOut, p.name || "product", token);
+        setP((cur) => {
+          const list = [...photosOf(cur), url].slice(0, MAX_PHOTOS);
+          return { ...cur, images: list, image: list[0] };
+        });
+      }
     } catch (err) {
       if (err instanceof AuthError) onExpired();
       setError((err as Error).message);
@@ -358,8 +381,8 @@ function Editor(props: {
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!p.name.trim()) return setError("Enter a product name.");
-    if (!p.catalogues.length) return setError("Tick at least one collection.");
-    if (!p.image) return setError("Add a photo.");
+    if (!p.catalogues.length) return setError("Tick at least one sub-section.");
+    if (!photos.length) return setError("Add at least one photo.");
     onSave({ ...p, name: p.name.trim(), tag: (p.tag ?? "").trim(), specs: specs.split("\n").map((s) => s.trim()).filter(Boolean) });
   };
 
@@ -385,27 +408,62 @@ function Editor(props: {
           </button>
         </div>
 
-        <div className="ad-photo">
-          <div className="ad-photo-box">{p.image ? <img src={p.image} alt="" /> : <span className="muted">No photo yet</span>}</div>
-          <div className="ad-photo-side">
-            <label className="btn btn-ghost">
-              {busy ?? (p.image ? "Change photo" : "Upload photo")}
-              <input
-                type="file"
-                accept="image/*"
-                hidden
-                disabled={!!busy}
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) upload(f);
-                  e.target.value = "";
-                }}
-              />
-            </label>
-            <label className="ad-check">
-              <input type="checkbox" checked={cutOut} onChange={(e) => setCutOut(e.target.checked)} /> Remove white background
-            </label>
-          </div>
+        <div className="ad-field">
+          <span>
+            Photos ({photos.length}/{MAX_PHOTOS}) — the first one is the main photo
+          </span>
+          <ul className="ad-gallery">
+            {photos.map((src, i) => (
+              <li key={src} className={i === 0 ? "is-main" : ""}>
+                <img src={src} alt={`Photo ${i + 1}`} />
+                {i === 0 && <em>Main</em>}
+                <div className="ad-gallery-tools">
+                  {i > 0 && (
+                    <button type="button" onClick={() => movePhoto(i, 0)} title="Make main photo" aria-label={`Make photo ${i + 1} the main photo`}>
+                      ★
+                    </button>
+                  )}
+                  {i > 0 && (
+                    <button type="button" onClick={() => movePhoto(i, i - 1)} aria-label={`Move photo ${i + 1} left`}>
+                      ‹
+                    </button>
+                  )}
+                  {i < photos.length - 1 && (
+                    <button type="button" onClick={() => movePhoto(i, i + 1)} aria-label={`Move photo ${i + 1} right`}>
+                      ›
+                    </button>
+                  )}
+                  <button type="button" className="is-remove" onClick={() => setPhotos(photos.filter((_, j) => j !== i))} aria-label={`Remove photo ${i + 1}`}>
+                    ✕
+                  </button>
+                </div>
+              </li>
+            ))}
+            {photos.length < MAX_PHOTOS && (
+              <li className="ad-gallery-add">
+                <label>
+                  <span aria-hidden>＋</span>
+                  {busy ?? (photos.length ? "Add photos" : "Upload photos")}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    hidden
+                    disabled={!!busy}
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files ?? []);
+                      if (files.length) upload(files);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+              </li>
+            )}
+          </ul>
+          <label className="ad-check">
+            <input type="checkbox" checked={cutOut} onChange={(e) => setCutOut(e.target.checked)} /> Remove white background
+            <small className="muted">(turn off for photos with a real background)</small>
+          </label>
         </div>
 
         <label className="ad-field">
@@ -435,7 +493,7 @@ function Editor(props: {
         </div>
 
         <fieldset className="ad-cats">
-          <legend>Collections</legend>
+          <legend>Sub-sections (tick where this product appears)</legend>
           {groups.map((g) => (
             <div key={g.id}>
               <small>{g.title}</small>

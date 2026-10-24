@@ -52,12 +52,12 @@ export default function CollectionsPanel({ groups, products, token, onChange, on
     const only = inIt.filter((p) => p.catalogues.length === 1);
     if (only.length) {
       window.alert(
-        `${only.length} product${only.length === 1 ? " is" : "s are"} only in "${c.title}".\n\nMove ${only.length === 1 ? "it" : "them"} to another collection or delete ${only.length === 1 ? "it" : "them"} first — or hide this collection instead.`,
+        `${only.length} product${only.length === 1 ? " is" : "s are"} only in "${c.title}".\n\nMove ${only.length === 1 ? "it" : "them"} to another sub-section or delete ${only.length === 1 ? "it" : "them"} first — or hide this sub-section instead.`,
       );
       return;
     }
     const msg = inIt.length
-      ? `Delete "${c.title}"? Its ${inIt.length} product${inIt.length === 1 ? "" : "s"} will stay in their other collections.`
+      ? `Delete "${c.title}"? Its ${inIt.length} product${inIt.length === 1 ? "" : "s"} will stay in their other sub-sections.`
       : `Delete "${c.title}"?`;
     if (!window.confirm(msg)) return;
     onChange(
@@ -68,7 +68,7 @@ export default function CollectionsPanel({ groups, products, token, onChange, on
 
   const removeGroup = (g: Group) => {
     if (g.catalogues.length) {
-      window.alert(`"${g.title}" still has ${g.catalogues.length} collection${g.catalogues.length === 1 ? "" : "s"}. Move or delete them first.`);
+      window.alert(`"${g.title}" still has ${g.catalogues.length} sub-section${g.catalogues.length === 1 ? "" : "s"}. Move or delete them first.`);
       return;
     }
     if (groups.length === 1) return window.alert("Keep at least one group.");
@@ -78,9 +78,14 @@ export default function CollectionsPanel({ groups, products, token, onChange, on
   return (
     <>
       <p className="ad-count muted">
-        Collections are the cards customers tap on the catalogue home page, grouped under headings. Use ↑ ↓ to change the order. Hidden collections
-        disappear from the catalogue but keep their products.
+        <strong>Sections</strong> are the big headings on the catalogue home page (e.g. Cycles, Kids &amp; Toys). Each section has{" "}
+        <strong>sub-sections</strong> — the cards customers tap (e.g. 26&quot; Cycles, Walker) — and each sub-section lists its products. Use ↑ ↓
+        to change the order. Hiding a sub-section keeps its products.
       </p>
+
+      <button type="button" className="btn btn-primary ad-add-section" onClick={() => setEditGroup({ isNew: true, g: { id: "", title: "", subtitle: "", catalogues: [] } })}>
+        + Add section
+      </button>
 
       <div className="ad-groups">
         {groups.map((g, gi) => (
@@ -100,7 +105,7 @@ export default function CollectionsPanel({ groups, products, token, onChange, on
                 <button type="button" className="btn btn-ghost btn-sm" onClick={() => setEditGroup({ g: { ...g }, isNew: false })}>
                   Rename
                 </button>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => removeGroup(g)} aria-label={`Delete group ${g.title}`}>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => removeGroup(g)} aria-label={`Delete section ${g.title}`}>
                   Delete
                 </button>
               </div>
@@ -165,14 +170,14 @@ export default function CollectionsPanel({ groups, products, token, onChange, on
               className="ad-add-col"
               onClick={() => setEditCol({ isNew: true, groupId: g.id, c: { id: "", title: "", blurb: "", badge: "", color: COLORS[(gi * 3 + g.catalogues.length) % COLORS.length], visible: true } })}
             >
-              + Add collection to {g.title}
+              + Add sub-section to {g.title}
             </button>
           </section>
         ))}
       </div>
 
       <button type="button" className="btn btn-ghost ad-add-group" onClick={() => setEditGroup({ isNew: true, g: { id: "", title: "", subtitle: "", catalogues: [] } })}>
-        + Add group (heading)
+        + Add section
       </button>
 
       <AnimatePresence>
@@ -213,9 +218,13 @@ export default function CollectionsPanel({ groups, products, token, onChange, on
             edit={editGroup}
             onClose={() => setEditGroup(null)}
             onSave={(g) => {
-              if (editGroup.isNew) onChange([...groups, { ...g, id: freshId(g.title, groups, "group"), catalogues: [] }]);
-              else onChange(groups.map((x) => (x.id === g.id ? { ...x, title: g.title, subtitle: g.subtitle } : x)));
               setEditGroup(null);
+              if (editGroup.isNew) {
+                const id = freshId(g.title, groups, "section");
+                onChange([...groups, { ...g, id, catalogues: [] }]);
+                // Straight on to its first sub-section
+                setEditCol({ isNew: true, groupId: id, c: { id: "", title: "", blurb: "", badge: "", color: COLORS[groups.length % COLORS.length], visible: true } });
+              } else onChange(groups.map((x) => (x.id === g.id ? { ...x, title: g.title, subtitle: g.subtitle } : x)));
             }}
           />
         )}
@@ -296,14 +305,14 @@ function CollectionEditor(props: {
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const title = c.title.trim();
-    if (!title) return setError("Enter a collection name.");
+    if (!title) return setError("Enter a sub-section name.");
     const clash = groups.some((g) => g.catalogues.some((x) => x.id !== c.id && x.title.trim().toLowerCase() === title.toLowerCase()));
-    if (clash) return setError(`There is already a collection called "${title}".`);
+    if (clash) return setError(`There is already a sub-section called "${title}".`);
     onSave({ ...c, title, blurb: c.blurb.trim(), badge: (c.badge ?? "").trim() }, groupId);
   };
 
   return (
-    <Sheet label={edit.isNew ? "Add collection" : "Edit collection"} onClose={onClose} busy={!!busy} onSubmit={submit}>
+    <Sheet label={edit.isNew ? "Add sub-section" : "Edit sub-section"} onClose={onClose} busy={!!busy} onSubmit={submit}>
       <div className="ad-photo">
         <div className="ad-photo-box ad-col-preview" style={{ ["--accent" as string]: c.color }}>
           {c.image || fallback ? <img src={c.image || fallback} alt="" /> : <span className="ad-badge-big">{c.badge || "?"}</span>}
@@ -352,7 +361,7 @@ function CollectionEditor(props: {
           <input value={c.badge ?? ""} onChange={(e) => set({ badge: e.target.value })} placeholder='20" or 🚲' maxLength={8} />
         </label>
         <label className="ad-field">
-          <span>Group (heading)</span>
+          <span>Section</span>
           <select value={groupId} onChange={(e) => setGroupId(e.target.value)}>
             {groups.map((g) => (
               <option key={g.id} value={g.id}>
@@ -394,7 +403,7 @@ function CollectionEditor(props: {
           Cancel
         </button>
         <button className="btn btn-primary" disabled={!!busy}>
-          {edit.isNew ? "Add collection" : "Save"}
+          {edit.isNew ? "Add sub-section" : "Save"}
         </button>
       </div>
     </Sheet>
@@ -407,19 +416,19 @@ function GroupEditor({ edit, onClose, onSave }: { edit: EditGroup; onClose: () =
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    if (!g.title.trim()) return setError("Enter a group name.");
+    if (!g.title.trim()) return setError("Enter a section name.");
     onSave({ ...g, title: g.title.trim(), subtitle: g.subtitle.trim() });
   };
 
   return (
-    <Sheet label={edit.isNew ? "Add group" : "Rename group"} onClose={onClose} onSubmit={submit}>
-      <p className="muted ad-hint">A group is a heading on the catalogue home page, like “Cycles” or “Kids & Toys”.</p>
+    <Sheet label={edit.isNew ? "Add section" : "Edit section"} onClose={onClose} onSubmit={submit}>
+      <p className="muted ad-hint">A section is a big heading on the catalogue home page, like “Cycles” or “Kids & Toys”. After adding it, add its sub-sections (e.g. 26" Cycles, Walker), then put products in them.</p>
       <label className="ad-field">
         <span>Name</span>
         <input value={g.title} onChange={(e) => setG({ ...g, title: e.target.value })} placeholder="e.g. Accessories" maxLength={40} required autoFocus />
       </label>
       <label className="ad-field">
-        <span>Line under the heading</span>
+        <span>Line under the section name</span>
         <input value={g.subtitle} onChange={(e) => setG({ ...g, subtitle: e.target.value })} placeholder="e.g. Helmets, locks, lights and more" maxLength={120} />
       </label>
       <div className="ad-editor-foot">
@@ -431,7 +440,7 @@ function GroupEditor({ edit, onClose, onSave }: { edit: EditGroup; onClose: () =
         <button type="button" className="btn btn-ghost" onClick={onClose}>
           Cancel
         </button>
-        <button className="btn btn-primary">{edit.isNew ? "Add group" : "Save"}</button>
+        <button className="btn btn-primary">{edit.isNew ? "Add section" : "Save"}</button>
       </div>
     </Sheet>
   );

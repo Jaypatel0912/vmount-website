@@ -61,7 +61,7 @@ export default function Login({ onToken, onClose }: { onToken: (t: string) => vo
       >
         <img src="/images/logo.png" alt="" />
         <h1>Catalogue manager</h1>
-        <p>Enter the staff password to update products, stock and collections.</p>
+        <p>Enter the staff password to update products, stock and sections.</p>
         <input type="password" autoFocus required placeholder="Password" aria-label="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         {error && (
           <p className="ad-error" role="alert">

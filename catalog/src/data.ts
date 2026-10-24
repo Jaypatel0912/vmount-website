@@ -30,7 +30,10 @@ export type Product = {
   name: string;
   /** Catalogue ids this product appears in. */
   catalogues: string[];
+  /** Main photo (always the first of `images`). */
   image: string;
+  /** All photos, main first. Older saved products only have `image`. */
+  images?: string[];
   specs: string[];
   tag?: string;
   /** Price in ₹; empty shows "Ask for price". */
@@ -122,6 +125,14 @@ export async function loadCatalog(timeoutMs = 2500) {
     clearTimeout(timer);
   }
 }
+
+/** Every photo of a product, main first. */
+export const photosOf = (p: Product) => (p.images?.length ? p.images : p.image ? [p.image] : []);
+
+/** Full web address of a page path or photo on this site (for WhatsApp messages). */
+export const absolute = (path: string) => new URL(path, window.location.origin).href;
+/** Link that opens this product in the catalogue. */
+export const productLink = (p: Product, cat: string) => absolute(`/#/c/${cat}/${p.id}`);
 
 export const isOut = (p: Product) => p.stock === 0;
 export const isLow = (p: Product) => typeof p.stock === "number" && p.stock > 0 && p.stock <= 3;

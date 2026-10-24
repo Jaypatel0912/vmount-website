@@ -303,3 +303,26 @@ main { max-width: 1240px; margin: 0 auto; padding: 0 16px 120px; min-height: 70v
   .foot { flex-wrap: wrap; }
   .staff-btn { margin-left: 68px; }
 }
+
+/* product photo strip */
+.ptile-count {
+  position: absolute; bottom: 8px; right: 8px; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700;
+  background: rgba(20, 33, 61, 0.78); color: #fff;
+}
+.shots { position: absolute; left: 0; right: 0; bottom: 34px; display: flex; justify-content: center; gap: 6px; padding: 0 56px; overflow-x: auto; scrollbar-width: none; }
+.shots::-webkit-scrollbar { display: none; }
+.shots button {
+  flex-shrink: 0; width: 46px; height: 46px; padding: 2px; border-radius: 10px; border: 2px solid var(--line); background: #fff; opacity: 0.75;
+  transition: border-color 0.2s, opacity 0.2s;
+}
+.shots button.is-on { border-color: var(--brand); opacity: 1; }
+.shots img { width: 100%; height: 100%; object-fit: contain; }
+.sheet-media:has(.shots) { padding-bottom: 96px; }
+
+/* share with photos */
+.share-photos { display: grid; gap: 4px; margin-top: 10px; }
+.share-photos small { font-size: 12px; text-align: center; }
+@media (max-width: 720px) {
+  .sheet-media:has(.shots) { padding-bottom: 90px; }
+  .shots button { width: 40px; height: 40px; }
+}

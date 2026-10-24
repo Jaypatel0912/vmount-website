@@ -18,6 +18,7 @@ const MAIN_SITE = "https://vmount-cycle.netlify.app";
 const MAX_PRODUCTS = 1000;
 const MAX_GROUPS = 12;
 const MAX_COLLECTIONS = 80;
+const MAX_PHOTOS = 10;
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 const SLUG = /^[a-z0-9-]+$/;
 const IMAGE = /^\/(images|api\/catalog\/image)\//;
@@ -36,13 +37,15 @@ function cleanProduct(p, i) {
   if (!p || typeof p !== "object") return [null, `${where}: invalid`];
   const id = text(p.id, 60).toLowerCase();
   const name = text(p.name, 90);
-  const image = text(p.image, 300);
+  // Photos: `images` (main first), falling back to the single `image` older lists have
+  const images = [...new Set((Array.isArray(p.images) ? p.images : [p.image]).map((u) => text(u, 300)).filter((u) => IMAGE.test(u)))].slice(0, MAX_PHOTOS);
+  const image = images[0] ?? "";
   const catalogues = Array.isArray(p.catalogues) ? [...new Set(p.catalogues.map((c) => text(c, 40)).filter((c) => SLUG.test(c)))].slice(0, 10) : [];
   const price = optionalInt(p.price, 10000000);
   const stock = optionalInt(p.stock, 100000);
   if (!SLUG.test(id)) return [null, `${where}: invalid ID`];
   if (!name) return [null, `${where}: name is required`];
-  if (!catalogues.length) return [null, `${where}: choose at least one collection`];
+  if (!catalogues.length) return [null, `${where}: choose at least one sub-section`];
   if (Number.isNaN(price)) return [null, `${where}: enter a valid price (or leave it empty)`];
   if (Number.isNaN(stock)) return [null, `${where}: stock must be 0 or more (or empty)`];
   if (!IMAGE.test(image)) return [null, `${where}: add a photo`];
@@ -52,6 +55,7 @@ function cleanProduct(p, i) {
       name,
       catalogues,
       image,
+      images,
       specs: Array.isArray(p.specs) ? p.specs.map((s) => text(s, 60)).filter(Boolean).slice(0, 10) : [],
       tag: text(p.tag, 24),
       price,
@@ -64,23 +68,23 @@ function cleanProduct(p, i) {
 
 /** Validate the groups of collections. Returns [groups, error]. */
 function cleanGroups(list) {
-  if (!Array.isArray(list) || !list.length) return [null, "Add at least one group"];
-  if (list.length > MAX_GROUPS) return [null, `At most ${MAX_GROUPS} groups`];
+  if (!Array.isArray(list) || !list.length) return [null, "Add at least one section"];
+  if (list.length > MAX_GROUPS) return [null, `At most ${MAX_GROUPS} sections`];
   const ids = new Set();
   const out = [];
   let total = 0;
   for (const [i, g] of list.entries()) {
     const title = text(g?.title, 40);
     const id = text(g?.id, 40).toLowerCase();
-    if (!title) return [null, `Group ${i + 1}: name is required`];
-    if (!SLUG.test(id) || ids.has(`g:${id}`)) return [null, `Group "${title}": invalid or duplicate ID`];
+    if (!title) return [null, `Section ${i + 1}: name is required`];
+    if (!SLUG.test(id) || ids.has(`g:${id}`)) return [null, `Section "${title}": invalid or duplicate ID`];
     ids.add(`g:${id}`);
     const catalogues = [];
     for (const c of Array.isArray(g.catalogues) ? g.catalogues : []) {
       const ct = text(c?.title, 40);
       const cid = text(c?.id, 40).toLowerCase();
-      if (!ct) return [null, `${title}: every collection needs a name`];
-      if (!SLUG.test(cid) || ids.has(cid)) return [null, `Collection "${ct}": invalid or duplicate ID`];
+      if (!ct) return [null, `${title}: every sub-section needs a name`];
+      if (!SLUG.test(cid) || ids.has(cid)) return [null, `Sub-section "${ct}": invalid or duplicate ID`];
       ids.add(cid);
       const image = text(c?.image, 300);
       catalogues.push({
@@ -96,7 +100,7 @@ function cleanGroups(list) {
     total += catalogues.length;
     out.push({ id, title, subtitle: text(g?.subtitle, 120), catalogues });
   }
-  if (total > MAX_COLLECTIONS) return [null, `At most ${MAX_COLLECTIONS} collections`];
+  if (total > MAX_COLLECTIONS) return [null, `At most ${MAX_COLLECTIONS} sub-sections`];
   return [out, null];
 }
 
@@ -193,7 +197,7 @@ export async function handleCatalog(req, store, rawEnv) {
       if (ids.has(clean.id)) return json({ error: `Two products use the ID "${clean.id}"` }, 400);
       if (known) {
         clean.catalogues = clean.catalogues.filter((c) => known.has(c));
-        if (!clean.catalogues.length) return json({ error: `"${clean.name}" is not in any existing collection` }, 400);
+        if (!clean.catalogues.length) return json({ error: `"${clean.name}" is not in any existing sub-section` }, 400);
       }
       ids.add(clean.id);
       products.push(clean);

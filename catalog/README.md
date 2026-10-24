@@ -17,7 +17,8 @@ appear on the catalogue within a few seconds.
   `0` shows **Out of stock** with a “Notify me” WhatsApp button; 1–3 shows **Only N left**.
   Clear the stock box in **Edit** to stop tracking (product always shows as available).
 - **Hide / show**: the 👁 button hides a product without deleting it.
-- **Add / edit / delete**: name, price (empty = “Ask for price”), tag, features, collections, and photo
+- **Add / edit / delete**: name, price (empty = “Ask for price”), tag, features, sub-sections, and
+  **up to 10 photos** — pick several at once; ★ makes one the main photo, ‹ › reorder, ✕ removes
   (white background can be removed automatically).
 - The cards at the top show totals and filter to Out of stock / Low stock / Hidden.
 
@@ -31,17 +32,29 @@ To give the catalogue its own password instead, set `CATALOG_PASSWORD`.
 Local changes are saved in `.dev-data/catalog/`; online they're stored in Netlify Blobs.
 Until the first save, the catalogue shows the built-in list in `src/products.json`.
 
-## Managing collections — `/admin` → Collections tab
+## Sections and sub-sections — `/admin` → Sections tab
 
-Collections are the cards on the catalogue home page (e.g. `26" Cycles`, `Walker`), grouped under
-headings (e.g. *Cycles*, *Kids & Toys*).
+The catalogue is organised as **Section → Sub-section → Products**, e.g. *Cycles → 26" Cycles → Duster 26"*
+or *Kids & Toys → Walker → Panda Gold Walker*. (In the code, sections are `groups` and sub-sections are
+`catalogues`.)
 
-- **Add / edit**: name, short description, badge (text or emoji), colour, heading, and an optional cover photo
-  (without one, the first in-stock product's photo is used).
-- **Order**: ↑ ↓ on collections and on headings.
-- **Hide**: 👁 hides a collection from customers but keeps its products.
-- **Delete**: allowed when every product in it is also in another collection (otherwise move or delete those
-  products first, or hide the collection). Headings can be deleted once they're empty.
-- “N products →” jumps to that collection's products.
+- **+ Add section** (top of the tab): name and a line under it. Right after, the form to add its first
+  sub-section opens; then add products and tick that sub-section.
+- **Sub-sections**: name, short description, badge (text or emoji), colour, section, optional cover photo
+  (otherwise the first in-stock product's photo is used).
+- **Order**: ↑ ↓ on sections and sub-sections. **Hide**: 👁 hides a sub-section but keeps its products.
+- **Delete**: a sub-section can be deleted when every product in it is also in another one (otherwise move
+  or delete those products first, or hide it). A section can be deleted once it's empty.
+- “N products →” jumps to that sub-section's products.
 
-Until collections are first saved, the built-in list in `src/data.ts` (`builtInGroups`) is used.
+Until sections are first saved, the built-in list in `src/data.ts` (`builtInGroups`) is used.
+
+## WhatsApp inquiries and photos
+
+A WhatsApp link (`wa.me`) can only carry text, so:
+
+- **Ask on WhatsApp / Send inquiry on WhatsApp** opens the VMount chat with the message filled in,
+  including a **photo link** for each item (and a link to the product).
+- **📷 Share with photos** (shown on phones) sends the actual photos through the phone's share menu:
+  the customer picks WhatsApp, then the VMount Bikes chat. The message is copied as well, in case
+  WhatsApp drops the text when several photos are shared.

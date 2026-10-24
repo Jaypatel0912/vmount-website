@@ -8,10 +8,13 @@ import {
   groupOf,
   groups,
   homeOf,
+  absolute,
   inr,
   isLow,
   isOut,
+  photosOf,
   products,
+  productLink,
   productsIn,
   search,
   waLink,
@@ -19,6 +22,7 @@ import {
   type Product,
 } from "./data";
 import { readToken } from "./admin/token";
+import { canSharePhotos, sharePhotos } from "./share";
 
 // The password popup is only downloaded when someone taps "Staff login"
 const StaffLogin = lazy(() => import("./admin/Login"));
@@ -169,6 +173,48 @@ function CatalogueTile({ c, index }: { c: Catalogue; index: number }) {
   );
 }
 
+/** One inquiry line per product, with a link to its main photo so it shows up in WhatsApp. */
+const inquiryText = (lines: { p: Product; qty?: number }[], intro: string) =>
+  [
+    intro,
+    ...lines.map(({ p, qty }, i) => `${lines.length > 1 ? `${i + 1}. ` : ""}${p.name}${qty ? ` — qty ${qty}` : ""}\n   Photo: ${absolute(p.image)}`),
+    "",
+    "Please share price and availability.",
+  ].join("\n");
+
+/** "Share with photos" button: sends real photos through the phone's share menu (pick WhatsApp → VMount). */
+function SharePhotosButton({ photos, text }: { photos: { url: string; name: string }[]; text: string }) {
+  const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
+  if (!canSharePhotos()) return null;
+  return (
+    <div className="share-photos">
+      <button
+        type="button"
+        className="btn btn-ghost"
+        disabled={state === "busy"}
+        onClick={async () => {
+          setState("busy");
+          try {
+            const r = await sharePhotos(photos, text);
+            setState(r === "shared" ? "done" : "idle");
+          } catch {
+            setState("error");
+          }
+        }}
+      >
+        📷 {state === "busy" ? "Preparing photos…" : `Share with ${photos.length === 1 ? "photo" : `${photos.length} photos`}`}
+      </button>
+      <small className="muted">
+        {state === "error"
+          ? "Couldn't share the photos — please try again."
+          : state === "done"
+            ? "Sent! If the message text is missing, paste it — it's copied."
+            : "Choose WhatsApp, then the VMount Bikes chat. The message is copied too."}
+      </small>
+    </div>
+  );
+}
+
 const notifyLink = (p: Product) => waLink(`Hi VMount, please tell me when "${p.name}" is back in stock.`);
 
 function StockNote({ p }: { p: Product }) {
@@ -190,6 +236,7 @@ function ProductTile({ p, cat, qty, onAdd, index }: { p: Product; cat: string; q
       <a href={`#/c/${cat}/${p.id}`} className="ptile-media" aria-label={`View ${p.name}`}>
         <img src={p.image} alt={p.name} loading="lazy" />
         {out ? <span className="ptile-tag is-out">Out of stock</span> : p.tag && <span className="ptile-tag">{p.tag}</span>}
+        {photosOf(p).length > 1 && <span className="ptile-count">📷 {photosOf(p).length}</span>}
       </a>
       <div className="ptile-body">
         <a href={`#/c/${cat}/${p.id}`} className="ptile-name">
@@ -358,6 +405,11 @@ function ProductModal({ p, cat, inquiry }: { p: Product; cat: string; inquiry: R
   const qty = inquiry.items[p.id] ?? 0;
   const close = () => go(`#/c/${cat}`);
   const c = findCatalogue(cat);
+  const photos = photosOf(p);
+  const [shot, setShot] = useState(0);
+  useEffect(() => setShot(0), [p.id]);
+  const photo = photos[Math.min(shot, photos.length - 1)] ?? p.image;
+  const askText = `Hi VMount, I'm interested in "${p.name}" (${c?.title}).\nPhoto: ${absolute(p.image)}\nLink: ${productLink(p, cat)}\n\nPlease share price and availability.`;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -392,19 +444,23 @@ function ProductModal({ p, cat, inquiry }: { p: Product; cat: string; inquiry: R
         <div className="sheet-media">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.img
-              key={p.id}
-              src={p.image}
-              alt={p.name}
+              key={photo}
+              src={photo}
+              alt={`${p.name}${photos.length > 1 ? ` — photo ${shot + 1} of ${photos.length}` : ""}`}
               initial={{ opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.94 }}
               transition={{ duration: 0.2 }}
-              drag={list.length > 1 ? "x" : false}
+              drag={photos.length > 1 || list.length > 1 ? "x" : false}
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.4}
               onDragEnd={(_, info) => {
-                if (info.offset.x < -60) go(`#/c/${cat}/${next.id}`);
-                else if (info.offset.x > 60) go(`#/c/${cat}/${prev.id}`);
+                // Swipe through this product's photos; past the last one, move to the next product
+                const dir = info.offset.x < -60 ? 1 : info.offset.x > 60 ? -1 : 0;
+                if (!dir) return;
+                const nextShot = shot + dir;
+                if (nextShot >= 0 && nextShot < photos.length) setShot(nextShot);
+                else if (list.length > 1) go(`#/c/${cat}/${(dir > 0 ? next : prev).id}`);
               }}
             />
           </AnimatePresence>
@@ -416,6 +472,15 @@ function ProductModal({ p, cat, inquiry }: { p: Product; cat: string; inquiry: R
                 {i + 1} / {list.length}
               </span>
             </>
+          )}
+          {photos.length > 1 && (
+            <div className="shots" role="tablist" aria-label="Photos">
+              {photos.map((src, k) => (
+                <button key={src} type="button" role="tab" aria-selected={k === shot} className={k === shot ? "is-on" : ""} onClick={() => setShot(k)} aria-label={`Photo ${k + 1}`}>
+                  <img src={src} alt="" />
+                </button>
+              ))}
+            </div>
           )}
         </div>
         <div className="sheet-body">
@@ -446,9 +511,10 @@ function ProductModal({ p, cat, inquiry }: { p: Product; cat: string; inquiry: R
                 + Add to inquiry
               </motion.button>
             )}
-            <a className="btn btn-wa" href={waLink(`Hi VMount, I'm interested in "${p.name}" (${c?.title}). Please share price and availability.`)} target="_blank" rel="noreferrer">
+            <a className="btn btn-wa" href={waLink(askText)} target="_blank" rel="noreferrer">
               <WaIcon /> Ask on WhatsApp
             </a>
+            <SharePhotosButton photos={photos.map((url) => ({ url, name: p.name }))} text={askText} />
           </div>
         </div>
       </motion.div>
@@ -462,8 +528,7 @@ function InquirySheet({ inquiry, onClose }: { inquiry: ReturnType<typeof useInqu
   const lines = Object.entries(inquiry.items)
     .map(([id, qty]) => ({ p: products.find((x) => x.id === id), qty }))
     .filter((l): l is { p: Product; qty: number } => !!l.p);
-  const message =
-    "Hi VMount, I'd like to inquire about:\n" + lines.map((l, i) => `${i + 1}. ${l.p.name} — qty ${l.qty}`).join("\n") + "\n\nPlease share prices and availability.";
+  const message = inquiryText(lines, "Hi VMount, I'd like to inquire about:");
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -518,6 +583,7 @@ function InquirySheet({ inquiry, onClose }: { inquiry: ReturnType<typeof useInqu
                 <WaIcon /> Send inquiry on WhatsApp
               </a>
             </div>
+            <SharePhotosButton photos={lines.map(({ p }) => ({ url: p.image, name: p.name }))} text={message} />
           </>
         )}
       </motion.div>
