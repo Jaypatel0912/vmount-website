@@ -1,0 +1,30 @@
+# Separate Netlify site for the catalogue.
+# In Netlify: Add new site → same GitHub repo → Base directory: catalog
+# No environment variables needed: /admin uses the same staff password as the main VMount website
+# (checked with https://vmount-cycle.netlify.app). Optional: CATALOG_PASSWORD for a separate password.
+[build]
+  command = "cd .. && npm ci && npm run catalog:build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Password-protected catalogue manager (same app, different screen)
+[[redirects]]
+  from = "/admin"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/admin"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

@@ -1,0 +1,1417 @@
+{
+ "products": [
+  {
+   "id": "prisha-20",
+   "name": "Prisha 20\"",
+   "catalogues": [
+    "size-20"
+   ],
+   "image": "/images/cycles/prisha-20.webp",
+   "specs": [
+    "Basket & bottle",
+    "Back-rest seat",
+    "Rear carrier",
+    "Training wheels"
+   ],
+   "tag": "Girls' favourite"
+  },
+  {
+   "id": "tarzan-20-ddb",
+   "name": "Tarzan DDB 20\"",
+   "catalogues": [
+    "size-20"
+   ],
+   "image": "/images/cycles/tarzan-20-ddb.webp",
+   "specs": [
+    "Fat tyres",
+    "Dual disc brakes",
+    "Front suspension",
+    "Mudguards"
+   ],
+   "tag": "New"
+  },
+  {
+   "id": "xuv-009-24",
+   "name": "XUV 009 24\"",
+   "catalogues": [
+    "size-24"
+   ],
+   "image": "/images/cycles/xuv-009-24.webp",
+   "specs": [
+    "24 × 2.40 tyres",
+    "Dual disc brakes",
+    "Front suspension",
+    "Bottle & stand"
+   ],
+   "tag": "Bestseller"
+  },
+  {
+   "id": "snoopy-24",
+   "name": "Snoopy 24\"",
+   "catalogues": [
+    "size-24"
+   ],
+   "image": "/images/cycles/snoopy-24.webp",
+   "specs": [
+    "Dual disc brakes",
+    "Front suspension",
+    "Mudguards",
+    "Bottle cage"
+   ],
+   "tag": ""
+  },
+  {
+   "id": "grd-26",
+   "name": "GRD 26\"",
+   "catalogues": [
+    "size-26"
+   ],
+   "image": "/images/cycles/grd-26.webp",
+   "specs": [
+    "Dual disc brakes",
+    "Front suspension",
+    "Mudguards",
+    "Bottle & stand"
+   ],
+   "tag": ""
+  },
+  {
+   "id": "fr-hexa-26",
+   "name": "FR Hexa 26\"",
+   "catalogues": [
+    "size-26"
+   ],
+   "image": "/images/cycles/fr-hexa-26.webp",
+   "specs": [
+    "Dual disc brakes",
+    "Front suspension",
+    "Mudguards",
+    "Bottle cage"
+   ],
+   "tag": ""
+  },
+  {
+   "id": "duster-26",
+   "name": "Duster 26\"",
+   "catalogues": [
+    "size-26"
+   ],
+   "image": "/images/cycles/duster-26.webp",
+   "specs": [
+    "26 × 2.40 tyres",
+    "Dual disc brakes",
+    "Front suspension",
+    "Bottle & stand"
+   ],
+   "tag": "Bestseller"
+  },
+  {
+   "id": "maxico-27-5",
+   "name": "Maxico 27.5\"",
+   "catalogues": [
+    "size-27-5"
+   ],
+   "image": "/images/cycles/maxico-27-5.webp",
+   "specs": [
+    "Dual disc brakes",
+    "Front suspension",
+    "Mudguards",
+    "Bottle & stand"
+   ],
+   "tag": ""
+  },
+  {
+   "id": "aristo-27-5",
+   "name": "Aristo 27.5\"",
+   "catalogues": [
+    "size-27-5",
+    "gear-cycle"
+   ],
+   "image": "/images/cycles/aristo-27-5.webp",
+   "specs": [
+    "Multi-speed gears",
+    "Dual disc brakes",
+    "Front suspension",
+    "Reflectors"
+   ],
+   "tag": "Gear"
+  },
+  {
+   "id": "maxico-29",
+   "name": "Maxico 29\"",
+   "catalogues": [
+    "size-29"
+   ],
+   "image": "/images/cycles/maxico-29.webp",
+   "specs": [
+    "Dual disc brakes",
+    "Front suspension",
+    "Mudguards",
+    "Bottle & stand"
+   ],
+   "tag": ""
+  },
+  {
+   "id": "aristo-29",
+   "name": "Aristo 29\"",
+   "catalogues": [
+    "size-29",
+    "gear-cycle"
+   ],
+   "image": "/images/cycles/aristo-29.webp",
+   "specs": [
+    "Multi-speed gears",
+    "Dual disc brakes",
+    "Front suspension",
+    "Reflectors"
+   ],
+   "tag": "Gear"
+  },
+  {
+   "id": "paris-700c",
+   "name": "Paris 700c",
+   "catalogues": [
+    "size-700c",
+    "gear-cycle"
+   ],
+   "image": "/images/cycles/paris-700c.webp",
+   "specs": [
+    "700c wheels",
+    "Multi-speed gears",
+    "Dual disc brakes",
+    "City hybrid frame"
+   ],
+   "tag": "Gear"
+  },
+  {
+   "id": "panda-panda-platinum-walker",
+   "name": "Panda Platinum Walker",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-platinum-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-panda-castle-walker",
+   "name": "Panda Castle Walker",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-castle-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-panda-111-walker",
+   "name": "Panda 111 Walker",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-111-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-pamda-777-walker",
+   "name": "Pamda 777 Walker",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-pamda-777-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-panda-gold-walker",
+   "name": "Panda Gold Walker",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-gold-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-panda-p-wagon-rider",
+   "name": "Panda P-wagon Rider",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-p-wagon-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-panda-p-wagon-plus-rider",
+   "name": "Panda P-wagon Plus Rider",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-p-wagon-plus-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-panda-gabru-horse",
+   "name": "Panda Gabru Horse",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-gabru-horse.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-panda-java-bike",
+   "name": "Panda Java Bike",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-java-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-panda-happy-birthday-tricycle",
+   "name": "Panda Happy Birthday Tricycle",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-happy-birthday-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "panda-panda-topaz-plus",
+   "name": "Panda Topaz Plus",
+   "catalogues": [
+    "panda"
+   ],
+   "image": "/images/kids/panda-panda-topaz-plus.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-bbc-neon-walker",
+   "name": "BBC Neon Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-bbc-neon-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-tz-040-activity-walker",
+   "name": "TZ- 040 Activity Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-tz-040-activity-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-tz-310-walker",
+   "name": "TZ-310 Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-tz-310-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-bidso-weegle-walker",
+   "name": "Bidso Weegle Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-bidso-weegle-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-ml-bounce-walker",
+   "name": "ML Bounce Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-ml-bounce-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-ml-donut-handle-walker",
+   "name": "ML Donut Handle Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-ml-donut-handle-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-pp-beary-boo-walker",
+   "name": "PP Beary BOO Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-pp-beary-boo-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-lb-3104-walker",
+   "name": "LB 3104 Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-lb-3104-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-lb-3102-walker",
+   "name": "LB- 3102 Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-lb-3102-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-sc-activity-walker",
+   "name": "SC Activity Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-sc-activity-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-ml-poppy-walker",
+   "name": "ML Poppy Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-ml-poppy-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-kp-kids-pride-walker",
+   "name": "KP Kids Pride Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-kp-kids-pride-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-lb-3106-walker",
+   "name": "LB-3106 Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-lb-3106-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-ml-genie-walker",
+   "name": "ML Genie Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-ml-genie-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-ml-classic-walker-music",
+   "name": "ML Classic Walker Music",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-ml-classic-walker-music.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "walker-dash-venus-walker",
+   "name": "Dash Venus Walker",
+   "catalogues": [
+    "walker"
+   ],
+   "image": "/images/kids/walker-dash-venus-walker.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-bs-01-tricycle",
+   "name": "BS 01 Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-bs-01-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-lb-593-tricycle",
+   "name": "LB 593 Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-lb-593-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-lb-591-tricycle",
+   "name": "LB 591 Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-lb-591-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-tz-001-tricycle",
+   "name": "TZ 001 Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-tz-001-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-tz-570-tricycle",
+   "name": "TZ 570 Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-tz-570-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-bidso-candor-basic-tricycle",
+   "name": "Bidso Candor Basic Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-bidso-candor-basic-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-lb-592-tricycle",
+   "name": "LB 592 Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-lb-592-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-bc-luna-muna-tricycle",
+   "name": "BC Luna Muna Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-bc-luna-muna-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-ml-turbi-1-tricycle",
+   "name": "ML TURBI-1 Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-ml-turbi-1-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-dash-duke-tricycle",
+   "name": "Dash Duke Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-dash-duke-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-nm-805-tricycle",
+   "name": "NM 805 Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-nm-805-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-bidso-storio-tricycle",
+   "name": "Bidso Storio Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-bidso-storio-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-tz-601-tricycle",
+   "name": "TZ 601 Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-tz-601-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-dash-vitara-super-hood-tricycle",
+   "name": "Dash Vitara Super Hood Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-dash-vitara-super-hood-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-dash-brezza-hood-tricycle",
+   "name": "Dash Brezza Hood Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-dash-brezza-hood-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "tricycle-lusa-brobot-pro-tricycle",
+   "name": "Lusa Brobot PRO Tricycle",
+   "catalogues": [
+    "tricycle"
+   ],
+   "image": "/images/kids/tricycle-lusa-brobot-pro-tricycle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-bhasin-3in1-monkey-rider",
+   "name": "Bhasin 3IN1 Monkey Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-bhasin-3in1-monkey-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-bhasin-bunny-rider",
+   "name": "Bhasin Bunny Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-bhasin-bunny-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-bhasin-magic-rider-3-in-1",
+   "name": "Bhasin Magic Rider 3 IN 1",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-bhasin-magic-rider-3-in-1.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-gpta-lambo-rider-handle",
+   "name": "Gpta Lambo Rider Handle",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-gpta-lambo-rider-handle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-pp-racing-car",
+   "name": "PP Racing Car",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-pp-racing-car.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-bhasin-n-torqe-scooter",
+   "name": "Bhasin N-torqe Scooter",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-bhasin-n-torqe-scooter.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-bidso-tiny-glide-rider",
+   "name": "Bidso Tiny Glide Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-bidso-tiny-glide-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-sc-fantom-rider",
+   "name": "SC Fantom Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-sc-fantom-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-ml-micky-rider",
+   "name": "ML Micky Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-ml-micky-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-new-orry-rider",
+   "name": "New Orry Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-new-orry-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-dash-robo-rider-handle",
+   "name": "Dash Robo Rider Handle",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-dash-robo-rider-handle.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-sky-tractor-rider",
+   "name": "SKY Tractor Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-sky-tractor-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-baybee-rd-113-rider",
+   "name": "Baybee RD-113 Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-baybee-rd-113-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-baybee-rd-114-rider",
+   "name": "Baybee RD-114 Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-baybee-rd-114-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-baabus-astronaut-rider",
+   "name": "Baabus Astronaut Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-baabus-astronaut-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "rider-gpta-hippo-basic-rider",
+   "name": "Gpta Hippo Basic Rider",
+   "catalogues": [
+    "rider"
+   ],
+   "image": "/images/kids/rider-gpta-hippo-basic-rider.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-801-runner",
+   "name": "801 Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-801-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-waka-stawberry-bear-runner-1403",
+   "name": "Waka Stawberry Bear Runner 1403",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-waka-stawberry-bear-runner-1403.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-waka-kuromi-runner-1404",
+   "name": "Waka Kuromi Runner 1404",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-waka-kuromi-runner-1404.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-waka-batman-runner",
+   "name": "Waka Batman Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-waka-batman-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-waka-spiderman-runner",
+   "name": "Waka Spiderman Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-waka-spiderman-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-waka-princess-runner",
+   "name": "Waka Princess Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-waka-princess-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-waka-barbie-runner",
+   "name": "Waka Barbie Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-waka-barbie-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-blaze-runner-without-led",
+   "name": "Blaze Runner Without LED",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-blaze-runner-without-led.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-bidso-spartan-runner",
+   "name": "Bidso Spartan Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-bidso-spartan-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-dash-cruzer-plus-runner",
+   "name": "Dash Cruzer Plus Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-dash-cruzer-plus-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-dash-noddy-runner",
+   "name": "Dash Noddy Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-dash-noddy-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-new-zippy-lite-runner",
+   "name": "New Zippy Lite Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-new-zippy-lite-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-bbc-alfa-runner",
+   "name": "BBC Alfa Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-bbc-alfa-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-dash-power-ranger-runner",
+   "name": "Dash Power Ranger Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-dash-power-ranger-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-dash-tango-runner",
+   "name": "Dash Tango Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-dash-tango-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kick-bike-dash-jumbo-runner",
+   "name": "Dash Jumbo Runner",
+   "catalogues": [
+    "kick-bike"
+   ],
+   "image": "/images/kids/kick-bike-dash-jumbo-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-ut-2588-jeep",
+   "name": "UT 2588 Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-ut-2588-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-pio-h20-jeep",
+   "name": "PIO H20 Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-pio-h20-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-bh-80g-jeep-painted",
+   "name": "BH 80G Jeep Painted",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-bh-80g-jeep-painted.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-jj-506-jeep",
+   "name": "JJ 506 Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-jj-506-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-jj-505-jeep",
+   "name": "JJ 505 Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-jj-505-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-jj-502-jeep",
+   "name": "JJ 502 Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-jj-502-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-jj-502-jeep-4-4",
+   "name": "JJ 502 Jeep 4*4",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-jj-502-jeep-4-4.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-jj-505-jeep-4-4",
+   "name": "JJ 505 Jeep 4*4",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-jj-505-jeep-4-4.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-jj-508-jeep-4-4",
+   "name": "JJ 508 Jeep 4*4",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-jj-508-jeep-4-4.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-jj-506-jeep-4-4",
+   "name": "JJ 506 Jeep 4*4",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-jj-506-jeep-4-4.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-pkq-612-jeep",
+   "name": "PKQ 612 Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-pkq-612-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-et-204-jeep",
+   "name": "ET 204 Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-et-204-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-et-202-jeep",
+   "name": "ET 202 Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-et-202-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-bh-60-g-jeep",
+   "name": "BH 60-G Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-bh-60-g-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-bh-60-t-jeep",
+   "name": "BH 60-T Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-bh-60-t-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "jeep-tz-velocity-ev-jeep",
+   "name": "TZ Velocity EV Jeep",
+   "catalogues": [
+    "jeep"
+   ],
+   "image": "/images/kids/jeep-tz-velocity-ev-jeep.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-new-24-volt-high-speed-bike",
+   "name": "New 24 Volt High Speed Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-new-24-volt-high-speed-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-new-f3-painted-bike",
+   "name": "New F3 Painted Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-new-f3-painted-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-rb-aviator-bike",
+   "name": "RB Aviator Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-rb-aviator-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-rb-tokyo-dlx-bike",
+   "name": "RB Tokyo DLX Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-rb-tokyo-dlx-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-new-m600-bike",
+   "name": "New M600 Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-new-m600-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-gpta-speed-star-bike",
+   "name": "Gpta Speed Star Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-gpta-speed-star-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-new-6688-bike-2-seater",
+   "name": "New 6688 Bike 2 Seater",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-new-6688-bike-2-seater.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-new-v-20-bike-jumbo",
+   "name": "New V 20 Bike Jumbo",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-new-v-20-bike-jumbo.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-new-828-bike",
+   "name": "New 828 Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-new-828-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-tz-rambo-ev-bike",
+   "name": "TZ Rambo EV Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-tz-rambo-ev-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-tz-speed-ev-bike",
+   "name": "TZ Speed EV Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-tz-speed-ev-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-new-dirt-bike-24v",
+   "name": "New Dirt Bike 24V",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-new-dirt-bike-24v.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-mb-169-jumbo-bike",
+   "name": "MB 169 Jumbo Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-mb-169-jumbo-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-lh-r3-bike-painted",
+   "name": "LH R3 Bike Painted",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-lh-r3-bike-painted.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-ut-cool-bike",
+   "name": "UT Cool Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-ut-cool-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "kids-bike-ut-hawk-bike",
+   "name": "UT Hawk Bike",
+   "catalogues": [
+    "kids-bike"
+   ],
+   "image": "/images/kids/kids-bike-ut-hawk-bike.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-lusa-vespa-rmt",
+   "name": "Lusa Vespa Rmt.",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-lusa-vespa-rmt.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-lusa-vespa",
+   "name": "Lusa Vespa",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-lusa-vespa.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-imp-urban-vespa",
+   "name": "IMP Urban Vespa",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-imp-urban-vespa.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-ad-618-vintage-vespa",
+   "name": "AD 618 Vintage Vespa",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-ad-618-vintage-vespa.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-doubal-seat-vespa-with-remote",
+   "name": "Doubal Seat Vespa With Remote",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-doubal-seat-vespa-with-remote.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-cosmo-vespox",
+   "name": "Cosmo Vespox",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-cosmo-vespox.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-cl-618-scooty",
+   "name": "CL 618 Scooty",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-cl-618-scooty.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-pio-hi-rides-scooter",
+   "name": "PIO HI Rides Scooter",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-pio-hi-rides-scooter.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-mi-runner",
+   "name": "MI Runner",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-mi-runner.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-new-619-vespa-rmt",
+   "name": "New 619 Vespa Rmt.",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-new-619-vespa-rmt.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-yzl-1688-scooter",
+   "name": "YZL 1688 Scooter",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-yzl-1688-scooter.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-et-502",
+   "name": "ET-502",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-et-502.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-3299-vespa",
+   "name": "3299 Vespa",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-3299-vespa.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-destiny-vespa",
+   "name": "Destiny Vespa",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-destiny-vespa.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-5188-scooter",
+   "name": "5188 Scooter",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-5188-scooter.webp",
+   "specs": [],
+   "tag": ""
+  },
+  {
+   "id": "scooty-gpta-trixo-scooty",
+   "name": "Gpta Trixo Scooty",
+   "catalogues": [
+    "scooty"
+   ],
+   "image": "/images/kids/scooty-gpta-trixo-scooty.webp",
+   "specs": [],
+   "tag": ""
+  }
+ ]
+}
