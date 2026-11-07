@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { allGroups, allProducts, inr, photosOf, setGroups, setProducts, type Group, type Product } from "../data";
+import { allGroups, allProducts, inr, LEVELS, photosOf, setGroups, setProducts, type Group, type Level, type Product } from "../data";
 
 const MAX_PHOTOS = 10;
 import { AuthError, api, readToken, saveToken, slug, uploadPhoto } from "./api";
 import CollectionsPanel from "./CollectionsPanel";
+import DealersPanel from "./DealersPanel";
+import OrdersPanel from "./OrdersPanel";
+import PriceListPanel from "./PriceListPanel";
 import Login from "./Login";
 import "./admin.css";
 
@@ -21,6 +24,7 @@ const matches = (p: Product, s: Status) =>
   (s === "tracked" && typeof p.stock === "number");
 
 type Save = { state: "idle" | "saving" | "saved" | "error"; message?: string };
+type Tab = "products" | "collections" | "dealers" | "prices" | "orders";
 
 /* ---------- main page ---------- */
 
@@ -28,7 +32,10 @@ export default function Admin() {
   const [token, setToken] = useState<string | null>(readToken);
   const [items, setItems] = useState<Product[]>(() => allProducts.map((p) => ({ ...p })));
   const [cols, setCols] = useState<Group[]>(() => structuredClone(allGroups));
-  const [tab, setTab] = useState<"products" | "collections">("products");
+  const [tab, setTab] = useState<Tab>("products");
+  // The public list has no wholesale prices, so after login the full list is loaded before anything can be edited
+  const [loaded, setLoaded] = useState(false);
+  const [newOrders, setNewOrders] = useState(0);
   const [dirty, setDirty] = useState(0);
   const [save, setSave] = useState<Save>({ state: "idle" });
   const [query, setQuery] = useState("");
@@ -42,9 +49,35 @@ export default function Admin() {
     document.title = "Catalogue manager — VMount";
   }, []);
 
+  // After login: load products with wholesale prices, and how many dealer orders are new
+  useEffect(() => {
+    if (!token || loaded) return;
+    let stop = false;
+    (async () => {
+      try {
+        const full = await api<{ products: Product[] | null; groups?: Group[] | null }>("/api/catalog/full", token);
+        if (stop) return;
+        if (Array.isArray(full.products)) setItems(full.products.map((p) => ({ ...p })));
+        if (full.groups?.length) setCols(structuredClone(full.groups));
+        setLoaded(true);
+        const o = await api<{ orders: { status: string }[] }>("/api/catalog/orders", token);
+        if (!stop) setNewOrders(o.orders.filter((x) => x.status === "new").length);
+      } catch (err) {
+        if (stop) return;
+        if (err instanceof AuthError) {
+          saveToken(null);
+          setToken(null);
+        } else setSave({ state: "error", message: (err as Error).message });
+      }
+    })();
+    return () => {
+      stop = true;
+    };
+  }, [token, loaded]);
+
   // Auto-save shortly after the last change
   useEffect(() => {
-    if (!dirty || !token) return;
+    if (!dirty || !token || !loaded) return;
     setSave({ state: "saving" });
     const t = setTimeout(async () => {
       try {
@@ -62,7 +95,7 @@ export default function Admin() {
       }
     }, 700);
     return () => clearTimeout(t);
-  }, [dirty, token]);
+  }, [dirty, token, loaded]);
 
   // Warn before closing the tab while a save is pending (not when logging out on purpose)
   const leaving = useRef(false);
@@ -141,15 +174,34 @@ export default function Admin() {
 
       <main className="ad-main">
         <div className="ad-tabs" role="tablist" aria-label="Manage">
-          {(["products", "collections"] as const).map((t) => (
+          {(["products", "collections", "prices", "dealers", "orders"] as const).map((t) => (
             <button key={t} type="button" role="tab" aria-selected={tab === t} className={tab === t ? "is-on" : ""} onClick={() => setTab(t)}>
               {tab === t && <motion.span layoutId="ad-tab-pill" className="ad-tab-pill" transition={{ type: "spring", bounce: 0.2, visualDuration: 0.3 }} />}
-              <span>{t === "products" ? `Products (${items.length})` : `Sections (${cols.length})`}</span>
+              <span>
+                {t === "products"
+                  ? `Products (${items.length})`
+                  : t === "collections"
+                    ? `Sections (${cols.length})`
+                    : t === "prices"
+                      ? "Price list"
+                      : t === "dealers"
+                        ? "Dealers"
+                        : "Orders"}
+                {t === "orders" && newOrders > 0 && <em className="ad-tab-badge">{newOrders} new</em>}
+              </span>
             </button>
           ))}
         </div>
 
-        {tab === "collections" ? (
+        {token && !loaded ? (
+          <p className="muted ad-count">Loading products and prices…</p>
+        ) : tab === "dealers" && token ? (
+          <DealersPanel token={token} products={items} onStatus={setSave} onExpired={() => { saveToken(null); setToken(null); }} />
+        ) : tab === "orders" && token ? (
+          <OrdersPanel token={token} onStatus={setSave} onExpired={() => { saveToken(null); setToken(null); }} onNewCount={setNewOrders} />
+        ) : tab === "prices" ? (
+          <PriceListPanel items={items} groups={cols} onChange={change} />
+        ) : tab === "collections" ? (
           <CollectionsPanel
             groups={cols}
             products={items}
@@ -230,6 +282,7 @@ export default function Admin() {
                   <strong>{p.name}</strong>
                   <span className="muted">
                     {titles(p)} · {p.price ? inr.format(p.price) : "Ask for price"}
+                    {typeof p.wholesale?.a === "number" && ` · Dealer A ${inr.format(p.wholesale.a)}`}
                   </span>
                   <span className="ad-flags">
                     {p.visible === false && <em className="is-hidden">Hidden</em>}
@@ -473,7 +526,7 @@ function Editor(props: {
 
         <div className="ad-row">
           <label className="ad-field">
-            <span>Price (₹)</span>
+            <span>Customer price (₹)</span>
             <input inputMode="numeric" value={p.price ?? ""} onChange={(e) => set({ price: numberOrNull(e.target.value) })} placeholder="Empty = Ask for price" />
           </label>
           <label className="ad-field">
@@ -491,6 +544,33 @@ function Editor(props: {
             <input type="checkbox" checked={p.visible !== false} onChange={(e) => set({ visible: e.target.checked })} /> Show in catalogue
           </label>
         </div>
+
+        <fieldset className="ad-cats">
+          <legend>Wholesale (only dealers see these)</legend>
+          <div className="ad-row is-3">
+            {LEVELS.map((l) => (
+              <label key={l} className="ad-field">
+                <span>Level {l.toUpperCase()} (₹)</span>
+                <input
+                  inputMode="numeric"
+                  value={p.wholesale?.[l] ?? ""}
+                  onChange={(e) => set({ wholesale: { ...p.wholesale, [l as Level]: numberOrNull(e.target.value) } })}
+                  placeholder="—"
+                />
+              </label>
+            ))}
+          </div>
+          <div className="ad-row">
+            <label className="ad-field">
+              <span>Minimum order (pcs)</span>
+              <input inputMode="numeric" value={p.minQty ?? ""} onChange={(e) => set({ minQty: numberOrNull(e.target.value) || null })} placeholder="1" />
+            </label>
+            <label className="ad-field">
+              <span>Pack size (pcs per pack)</span>
+              <input inputMode="numeric" value={p.packSize ?? ""} onChange={(e) => set({ packSize: numberOrNull(e.target.value) || null })} placeholder="1" />
+            </label>
+          </div>
+        </fieldset>
 
         <fieldset className="ad-cats">
           <legend>Sub-sections (tick where this product appears)</legend>

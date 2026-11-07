@@ -326,3 +326,46 @@ main { max-width: 1240px; margin: 0 auto; padding: 0 16px 120px; min-height: 70v
   .sheet-media:has(.shots) { padding-bottom: 90px; }
   .shots button { width: 40px; height: 40px; }
 }
+
+/* ---------- dealer link ---------- */
+.dealer-bar {
+  position: sticky; top: 63px; z-index: 25; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  max-width: 1240px; margin: 0 auto; padding: 8px 16px; font-size: 13px;
+  background: linear-gradient(90deg, #14213d, #1f3160); color: #fff; border-radius: 0 0 14px 14px;
+}
+.dealer-bar strong { color: #ffc27a; }
+.dealer-bar button {
+  flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(255, 255, 255, 0.12); color: #fff;
+  border-radius: 999px; padding: 5px 12px; font-weight: 700; font-size: 12px;
+}
+.price-retail { color: var(--muted); font-weight: 500; font-size: 0.82em; margin-right: 6px; }
+.rules { font-size: 11px; font-weight: 700; color: #1f3160; background: #eef2ff; border-radius: 999px; padding: 1px 8px; justify-self: start; width: fit-content; }
+.order-total { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 4px; border-top: 1px dashed var(--line); margin-top: 6px; }
+.order-total strong { font: 700 22px var(--display); color: var(--navy); }
+.order-hint { font-size: 12px; margin: -4px 4px 8px; }
+.order-note { display: grid; gap: 4px; margin: 6px 0 4px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.order-note textarea { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font: inherit; color: var(--ink); resize: vertical; }
+.order-note textarea:focus { outline: 0; border-color: var(--brand); }
+.order-error { color: #b91c1c; font-weight: 600; font-size: 14px; margin: 6px 0; }
+.placed { display: grid; justify-items: center; text-align: center; gap: 10px; padding: 10px 0 4px; }
+.placed-tick { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: #dcfce7; color: #15803d; font-size: 32px; font-weight: 700; }
+.placed .btn { width: 100%; }
+.my-orders { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.my-orders li { display: grid; gap: 3px; border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+.my-orders li > div { display: flex; justify-content: space-between; align-items: center; }
+.my-orders small { font-size: 12px; }
+.status { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--bg); color: var(--muted); }
+.status.is-new { background: #fff5ea; color: var(--brand-ink); }
+.status.is-confirmed { background: #e0f2fe; color: #0369a1; }
+.status.is-dispatched { background: #ede9fe; color: #6d28d9; }
+.status.is-paid { background: #dcfce7; color: #15803d; }
+.status.is-cancelled { background: #fee2e2; color: #b91c1c; }
+.link-problem { max-width: 420px; margin: 12vh auto 0; padding: 24px 16px; text-align: center; display: grid; gap: 12px; justify-items: center; }
+.link-problem img { width: 72px; height: 72px; border-radius: 50%; }
+.link-problem p { color: var(--muted); margin: 0; }
+.link-problem-home { color: var(--brand-ink); font-weight: 600; font-size: 14px; }
+@media (max-width: 720px) {
+  .dealer-bar { top: 107px; border-radius: 0; }
+}
+.inq-list .rules { display: block; margin-top: 3px; }
+.inq-list .muted { display: block; }

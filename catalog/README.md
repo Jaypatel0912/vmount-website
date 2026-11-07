@@ -58,3 +58,29 @@ A WhatsApp link (`wa.me`) can only carry text, so:
 - **📷 Share with photos** (shown on phones) sends the actual photos through the phone's share menu:
   the customer picks WhatsApp, then the VMount Bikes chat. The message is copied as well, in case
   WhatsApp drops the text when several photos are shared.
+
+## Wholesale: dealers, dealer prices and orders — `/admin`
+
+Each dealer gets a **private link** (`/d/<code>`) — no password to remember. Through it they see the
+catalogue with **their wholesale prices** (customer price crossed out), place orders, and follow them in
+“My orders”. Normal customers keep seeing the **Customer price** (empty = “Ask for price”).
+
+**What a dealer pays**, in order:
+1. a **special price** set for that dealer and product, else
+2. the product's **Level A / B / C** price (the dealer's level) **minus the dealer's extra discount %**, else
+3. “Ask for price”.
+
+Tabs in the manager:
+
+- **Price list** — one table for Customer / Level A / B / C prices, **Min** (smallest dealer order, pcs)
+  and **Pack** (pcs per pack; dealers order in whole packs). Bulk “± %” change for the products shown.
+  The product form has the same fields.
+- **Dealers** — add/edit (shop, owner, WhatsApp number, city, level, extra discount %, special prices,
+  notes). Each row: **Copy link**, **Send on WhatsApp**, **Preview**. Switch a dealer off, or tick
+  “Make a new link”, and the old link stops working at once.
+- **Orders** — every dealer order (VM-0001, …) with status **New → Confirmed → Dispatched → Paid**
+  (or Cancelled), **WhatsApp dealer** (sends the status), and **Print / PDF**. The dealer sees status
+  changes in “My orders”. Order prices are always worked out on the server from the current prices.
+
+Wholesale prices are never in the public product list (`GET /api/catalog`); they come only with the
+staff login (`/api/catalog/full`) or an active dealer link.

@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
   business,
@@ -9,16 +9,23 @@ import {
   groups,
   homeOf,
   absolute,
+  dealer,
   inr,
   isLow,
   isOut,
   photosOf,
+  minOf,
+  packOf,
+  priceFor,
   products,
   productLink,
   productsIn,
   search,
+  stepQty,
+  STATUS_LABELS,
   waLink,
   type Catalogue,
+  type Order,
   type Product,
 } from "./data";
 import { readToken } from "./admin/token";
@@ -54,7 +61,8 @@ const go = (hash: string) => {
 /* ---------- inquiry list (kept in this browser) ---------- */
 
 type Inquiry = Record<string, number>;
-const KEY = "vmount-catalogue-inquiry";
+// Dealers get their own order list on their link; customers keep the inquiry list
+const KEY = dealer ? `vmount-dealer-order-${dealer.code}` : "vmount-catalogue-inquiry";
 
 function useInquiry() {
   const [items, setItems] = useState<Inquiry>(() => {
@@ -75,13 +83,39 @@ function useInquiry() {
     setItems((cur) => {
       const next = { ...cur };
       if (qty <= 0) delete next[id];
-      else next[id] = Math.min(qty, 99);
+      else next[id] = Math.min(qty, 99999);
       return next;
     });
-  return { items, set, clear: () => setItems({}) };
+  /** Add one more (dealers: in whole packs, starting at the minimum order). */
+  const add = (p: Product) => set(p.id, stepQty(p, items[p.id] ?? 0, 1));
+  const step = (p: Product, dir: 1 | -1) => set(p.id, stepQty(p, items[p.id] ?? 0, dir));
+  return { items, set, add, step, clear: () => setItems({}) };
 }
 
-const priceText = (p: Product) => (p.price ? inr.format(p.price) : "Ask for price");
+const priceText = (p: Product) => {
+  const price = priceFor(p);
+  return price ? inr.format(price) : "Ask for price";
+};
+const listWord = dealer ? "order" : "inquiry";
+
+/** Price for whoever is looking; dealers also see the customer price crossed out. */
+function PriceTag({ p, big }: { p: Product; big?: boolean }) {
+  const price = priceFor(p);
+  const retail = dealer && p.price && price && p.price > price ? p.price : null;
+  return (
+    <span className={`price${price ? "" : " is-ask"}${big ? " is-big" : ""}`}>
+      {retail && <s className="price-retail">{inr.format(retail)}</s>}
+      {priceText(p)}
+    </span>
+  );
+}
+
+/** Dealer ordering rules, e.g. "Min 4 pcs · Packs of 2". */
+function DealerRules({ p }: { p: Product }) {
+  if (!dealer) return null;
+  const parts = [minOf(p) > 1 && `Min ${minOf(p)} pcs`, packOf(p) > 1 && `Packs of ${packOf(p)}`].filter(Boolean);
+  return parts.length ? <span className="rules">{parts.join(" · ")}</span> : null;
+}
 
 /* ---------- small pieces ---------- */
 
@@ -110,7 +144,7 @@ function Header({ query, setQuery, count, onInquiry }: { query: string; setQuery
           <img src="/images/logo.png" alt="" />
           <span>
             <strong>V Mount Bikes</strong>
-            <small>Catalogue</small>
+            <small>{dealer ? "Dealer prices" : "Catalogue"}</small>
           </span>
         </a>
         <label className="search">
@@ -126,7 +160,7 @@ function Header({ query, setQuery, count, onInquiry }: { query: string; setQuery
             aria-label="Search the catalogue"
           />
         </label>
-        <button type="button" className="inq-btn" onClick={onInquiry} aria-label={`Inquiry list, ${count} items`}>
+        <button type="button" className="inq-btn" onClick={onInquiry} aria-label={`${dealer ? "Order" : "Inquiry"} list, ${count} items`}>
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M6 7h12l-1 13H7L6 7Z" />
             <path d="M9 7a3 3 0 0 1 6 0" />
@@ -243,14 +277,15 @@ function ProductTile({ p, cat, qty, onAdd, index }: { p: Product; cat: string; q
           {p.name}
         </a>
         {isLow(p) && <StockNote p={p} />}
+        <DealerRules p={p} />
         <div className="ptile-foot">
-          <span className={p.price ? "price" : "price is-ask"}>{priceText(p)}</span>
+          <PriceTag p={p} />
           {out ? (
             <a className="add is-notify" href={notifyLink(p)} target="_blank" rel="noreferrer">
               Notify me
             </a>
           ) : (
-            <motion.button type="button" className={`add${qty ? " is-in" : ""}`} onClick={onAdd} whileTap={{ scale: 0.85 }} aria-label={qty ? `${p.name}: ${qty} in inquiry, add one more` : `Add ${p.name} to inquiry`}>
+            <motion.button type="button" className={`add${qty ? " is-in" : ""}`} onClick={onAdd} whileTap={{ scale: 0.85 }} aria-label={qty ? `${p.name}: ${qty} in ${listWord}, add more` : `Add ${p.name} to ${listWord}`}>
               {qty ? `✓ ${qty}` : "+ Add"}
             </motion.button>
           )}
@@ -274,7 +309,7 @@ function Home({ query, inquiry }: { query: string; inquiry: ReturnType<typeof us
         </div>
         <div className="pgrid">
           {results.map((p, i) => (
-            <ProductTile key={p.id} p={p} cat={homeOf(p)!} qty={inquiry.items[p.id] ?? 0} onAdd={() => inquiry.set(p.id, (inquiry.items[p.id] ?? 0) + 1)} index={i} />
+            <ProductTile key={p.id} p={p} cat={homeOf(p)!} qty={inquiry.items[p.id] ?? 0} onAdd={() => inquiry.add(p)} index={i} />
           ))}
         </div>
       </section>
@@ -292,7 +327,9 @@ function Home({ query, inquiry }: { query: string; inquiry: ReturnType<typeof us
             The VMount <em>catalogue</em>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
-            {catalogues.length} collections · {products.length} products. Tap a collection, add what you like, and send one inquiry on WhatsApp.
+            {dealer
+              ? `Your dealer price list · ${products.length} products. Add what you need and place your order — it comes straight to us.`
+              : `${catalogues.length} collections · ${products.length} products. Tap a collection, add what you like, and send one inquiry on WhatsApp.`}
           </motion.p>
           <motion.div className="hero-jump" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.24 }}>
             {groups.map((g) => (
@@ -387,7 +424,7 @@ function CataloguePage({ c, inquiry }: { c: Catalogue; inquiry: ReturnType<typeo
       ) : (
         <motion.div layout className="pgrid">
           {shown.map((p, i) => (
-            <ProductTile key={p.id} p={p} cat={c.id} qty={inquiry.items[p.id] ?? 0} onAdd={() => inquiry.set(p.id, (inquiry.items[p.id] ?? 0) + 1)} index={i} />
+            <ProductTile key={p.id} p={p} cat={c.id} qty={inquiry.items[p.id] ?? 0} onAdd={() => inquiry.add(p)} index={i} />
           ))}
         </motion.div>
       )}
@@ -409,7 +446,7 @@ function ProductModal({ p, cat, inquiry }: { p: Product; cat: string; inquiry: R
   const [shot, setShot] = useState(0);
   useEffect(() => setShot(0), [p.id]);
   const photo = photos[Math.min(shot, photos.length - 1)] ?? p.image;
-  const askText = `Hi VMount, I'm interested in "${p.name}" (${c?.title}).\nPhoto: ${absolute(p.image)}\nLink: ${productLink(p, cat)}\n\nPlease share price and availability.`;
+  const askText = `Hi VMount,${dealer ? ` (${dealer.shop})` : ""} I'm interested in "${p.name}" (${c?.title}).\nPhoto: ${absolute(p.image)}\nLink: ${productLink(p, cat)}\n\nPlease share ${dealer ? "availability" : "price and availability"}.`;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -486,8 +523,9 @@ function ProductModal({ p, cat, inquiry }: { p: Product; cat: string; inquiry: R
         <div className="sheet-body">
           <span className="sheet-cat">{c?.title}</span>
           <h2>{p.name}</h2>
-          <span className={p.price ? "price is-big" : "price is-ask is-big"}>{priceText(p)}</span>
+          <PriceTag p={p} big />
           <StockNote p={p} />
+          <DealerRules p={p} />
           {p.specs.length > 0 && (
             <ul className="specs">
               {p.specs.map((s) => (
@@ -501,14 +539,16 @@ function ProductModal({ p, cat, inquiry }: { p: Product; cat: string; inquiry: R
                 Notify me when back in stock
               </a>
             ) : qty ? (
-              <div className="qty" aria-label="Quantity in inquiry">
-                <button type="button" onClick={() => inquiry.set(p.id, qty - 1)} aria-label="One less">−</button>
-                <span>{qty} in inquiry</span>
-                <button type="button" onClick={() => inquiry.set(p.id, qty + 1)} aria-label="One more">+</button>
+              <div className="qty" aria-label={`Quantity in ${listWord}`}>
+                <button type="button" onClick={() => inquiry.step(p, -1)} aria-label="Less">−</button>
+                <span>
+                  {qty} {dealer ? "pcs" : ""} in {listWord}
+                </span>
+                <button type="button" onClick={() => inquiry.step(p, 1)} aria-label="More">+</button>
               </div>
             ) : (
-              <motion.button type="button" className="btn btn-primary" whileTap={{ scale: 0.96 }} onClick={() => inquiry.set(p.id, 1)}>
-                + Add to inquiry
+              <motion.button type="button" className="btn btn-primary" whileTap={{ scale: 0.96 }} onClick={() => inquiry.add(p)}>
+                + Add to {listWord}
               </motion.button>
             )}
             <a className="btn btn-wa" href={waLink(askText)} target="_blank" rel="noreferrer">
@@ -525,6 +565,11 @@ function ProductModal({ p, cat, inquiry }: { p: Product; cat: string; inquiry: R
 /* ---------- inquiry sheet ---------- */
 
 function InquirySheet({ inquiry, onClose }: { inquiry: ReturnType<typeof useInquiry>; onClose: () => void }) {
+  if (dealer) return <DealerOrderSheet inquiry={inquiry} onClose={onClose} />;
+  return <CustomerInquirySheet inquiry={inquiry} onClose={onClose} />;
+}
+
+function CustomerInquirySheet({ inquiry, onClose }: { inquiry: ReturnType<typeof useInquiry>; onClose: () => void }) {
   const lines = Object.entries(inquiry.items)
     .map(([id, qty]) => ({ p: products.find((x) => x.id === id), qty }))
     .filter((l): l is { p: Product; qty: number } => !!l.p);
@@ -567,9 +612,9 @@ function InquirySheet({ inquiry, onClose }: { inquiry: ReturnType<typeof useInqu
                       <span className="muted">{priceText(p)}</span>
                     </div>
                     <div className="qty is-small">
-                      <button type="button" onClick={() => inquiry.set(p.id, qty - 1)} aria-label={`One less ${p.name}`}>−</button>
+                      <button type="button" onClick={() => inquiry.step(p, -1)} aria-label={`One less ${p.name}`}>−</button>
                       <span>{qty}</span>
-                      <button type="button" onClick={() => inquiry.set(p.id, qty + 1)} aria-label={`One more ${p.name}`}>+</button>
+                      <button type="button" onClick={() => inquiry.step(p, 1)} aria-label={`One more ${p.name}`}>+</button>
                     </div>
                   </motion.li>
                 ))}
@@ -591,6 +636,213 @@ function InquirySheet({ inquiry, onClose }: { inquiry: ReturnType<typeof useInqu
   );
 }
 
+/* ---------- dealer: order sheet and order history ---------- */
+
+const when = (iso: string) => new Date(iso).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+
+function useEscape(onClose: () => void) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+}
+
+function Sheet({ label, onClose, children }: { label: string; onClose: () => void; children: ReactNode }) {
+  useEscape(onClose);
+  return (
+    <motion.div className="modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
+      <motion.div
+        className="sheet is-list"
+        role="dialog"
+        aria-modal="true"
+        aria-label={label}
+        initial={{ y: 80 }}
+        animate={{ y: 0 }}
+        exit={{ y: 80, opacity: 0 }}
+        transition={{ type: "spring", visualDuration: 0.35, bounce: 0.12 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button type="button" className="sheet-close" onClick={onClose} aria-label="Close">
+          ✕
+        </button>
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/** WhatsApp text for a placed order, so staff also see it in the chat right away. */
+const orderMessage = (o: Order) =>
+  [
+    `Hi VMount, new order ${o.number} from ${dealer!.shop}${dealer!.city ? `, ${dealer!.city}` : ""}:`,
+    ...o.items.map((l, i) => `${i + 1}. ${l.name} — ${l.qty} pcs${l.price ? ` × ${inr.format(l.price)} = ${inr.format(l.lineTotal ?? 0)}` : " (price to confirm)"}`),
+    "",
+    `Total: ${inr.format(o.total)}${o.unpriced ? ` + ${o.unpriced} item${o.unpriced === 1 ? "" : "s"} to price` : ""}`,
+    ...(o.note ? ["", `Note: ${o.note}`] : []),
+  ].join("\n");
+
+function DealerOrderSheet({ inquiry, onClose }: { inquiry: ReturnType<typeof useInquiry>; onClose: () => void }) {
+  const d = dealer!;
+  const lines = Object.entries(inquiry.items)
+    .map(([id, qty]) => ({ p: products.find((x) => x.id === id), qty }))
+    .filter((l): l is { p: Product; qty: number } => !!l.p);
+  const total = lines.reduce((sum, { p, qty }) => sum + (priceFor(p) ?? 0) * qty, 0);
+  const unpriced = lines.filter(({ p }) => priceFor(p) === null).length;
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [placed, setPlaced] = useState<Order | null>(null);
+
+  const place = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const r = await fetch(`/api/catalog/dealer/${d.code}/order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: lines.map(({ p, qty }) => ({ id: p.id, qty })), note }),
+      }).catch(() => {
+        throw new Error("Can't reach V Mount Bikes — check your internet connection and try again.");
+      });
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(body.error || "Couldn't place the order — please try again.");
+      setPlaced(body.order);
+      inquiry.clear();
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (placed) {
+    return (
+      <Sheet label="Order placed" onClose={onClose}>
+        <div className="placed">
+          <span className="placed-tick" aria-hidden>
+            ✓
+          </span>
+          <h2>Order {placed.number} placed</h2>
+          <p className="muted">
+            We've received it — {placed.items.length} product{placed.items.length === 1 ? "" : "s"}, total {inr.format(placed.total)}
+            {placed.unpriced ? ` + ${placed.unpriced} to price` : ""}. You can follow it in “My orders”.
+          </p>
+          <a className="btn btn-wa" href={waLink(orderMessage(placed))} target="_blank" rel="noreferrer">
+            <WaIcon /> Also send it on WhatsApp
+          </a>
+          <button type="button" className="btn btn-ghost" onClick={onClose}>
+            Done
+          </button>
+        </div>
+      </Sheet>
+    );
+  }
+
+  return (
+    <Sheet label="Your order" onClose={onClose}>
+      <h2>Your order</h2>
+      {lines.length === 0 ? (
+        <p className="muted">Nothing added yet. Tap “+ Add” on any product.</p>
+      ) : (
+        <>
+          <ul className="inq-list">
+            <AnimatePresence initial={false}>
+              {lines.map(({ p, qty }) => {
+                const price = priceFor(p);
+                return (
+                  <motion.li key={p.id} layout exit={{ opacity: 0, x: 40 }}>
+                    <img src={p.image} alt="" />
+                    <div>
+                      <strong>{p.name}</strong>
+                      <span className="muted">{price ? `${inr.format(price)} × ${qty} = ${inr.format(price * qty)}` : "Price to confirm"}</span>
+                      <DealerRules p={p} />
+                    </div>
+                    <div className="qty is-small">
+                      <button type="button" onClick={() => inquiry.step(p, -1)} aria-label={`Less ${p.name}`}>
+                        −
+                      </button>
+                      <span>{qty}</span>
+                      <button type="button" onClick={() => inquiry.step(p, 1)} aria-label={`More ${p.name}`}>
+                        +
+                      </button>
+                    </div>
+                  </motion.li>
+                );
+              })}
+            </AnimatePresence>
+          </ul>
+          <div className="order-total">
+            <span>Total</span>
+            <strong>{inr.format(total)}</strong>
+          </div>
+          {unpriced > 0 && (
+            <p className="muted order-hint">
+              {unpriced} product{unpriced === 1 ? " has" : "s have"} no price yet — we'll confirm it.
+            </p>
+          )}
+          <label className="order-note">
+            <span>Note for V Mount Bikes (optional)</span>
+            <textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} maxLength={500} placeholder="Colours, delivery date, transport…" />
+          </label>
+          {error && (
+            <p className="order-error" role="alert">
+              {error}
+            </p>
+          )}
+          <div className="sheet-actions">
+            <button type="button" className="btn btn-ghost" onClick={inquiry.clear} disabled={busy}>
+              Clear
+            </button>
+            <button type="button" className="btn btn-primary" onClick={place} disabled={busy}>
+              {busy ? "Placing order…" : `Place order · ${inr.format(total)}`}
+            </button>
+          </div>
+        </>
+      )}
+    </Sheet>
+  );
+}
+
+function MyOrdersSheet({ onClose }: { onClose: () => void }) {
+  const [orders, setOrders] = useState<Order[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    fetch(`/api/catalog/dealer/${dealer!.code}/orders`)
+      .then((r) => r.json())
+      .then((b) => (Array.isArray(b.orders) ? setOrders(b.orders) : setError(b.error || "Couldn't load your orders")))
+      .catch(() => setError("Can't reach V Mount Bikes right now — try again in a moment."));
+  }, []);
+  return (
+    <Sheet label="My orders" onClose={onClose}>
+      <h2>My orders</h2>
+      {error ? (
+        <p className="order-error">{error}</p>
+      ) : !orders ? (
+        <p className="muted">Loading…</p>
+      ) : !orders.length ? (
+        <p className="muted">No orders yet.</p>
+      ) : (
+        <ul className="my-orders">
+          {orders.map((o) => (
+            <li key={o.number}>
+              <div>
+                <strong>{o.number}</strong>
+                <span className={`status is-${o.status}`}>{STATUS_LABELS[o.status]}</span>
+              </div>
+              <span className="muted">
+                {when(o.createdAt)} · {o.items.reduce((sum, l) => sum + l.qty, 0)} pcs · {inr.format(o.total)}
+                {o.unpriced ? ` + ${o.unpriced} to price` : ""}
+              </span>
+              <small className="muted">{o.items.map((l) => `${l.name} × ${l.qty}`).join(", ")}</small>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Sheet>
+  );
+}
+
 /* ---------- app ---------- */
 
 export default function App() {
@@ -599,6 +851,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [showInquiry, setShowInquiry] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showOrders, setShowOrders] = useState(false);
   // Already logged in on this tab: go straight to the manager
   const staffLogin = () => (readToken() ? openManager() : setShowLogin(true));
   const c = route.catalogue ? findCatalogue(route.catalogue) : undefined;
@@ -612,6 +865,17 @@ export default function App() {
   return (
     <>
       <Header query={query} setQuery={setQuery} count={count} onInquiry={() => setShowInquiry(true)} />
+      {dealer && (
+        <div className="dealer-bar">
+          <span>
+            <strong>{dealer.shop}</strong>
+            {dealer.city && ` · ${dealer.city}`} · Dealer price list (Level {dealer.level})
+          </span>
+          <button type="button" onClick={() => setShowOrders(true)}>
+            My orders
+          </button>
+        </div>
+      )}
       <main>
         <AnimatePresence mode="wait">
           <motion.div key={c?.id ?? "home"} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
@@ -654,14 +918,14 @@ export default function App() {
             onClick={() => setShowInquiry(true)}
           >
             <span>
-              <strong>{count}</strong> {count === 1 ? "item" : "items"} in inquiry
+              <strong>{count}</strong> {dealer ? "pcs in your order" : `${count === 1 ? "item" : "items"} in inquiry`}
             </span>
             <span className="inq-go">
-              Review & send <WaIcon />
+              {dealer ? "Review & place order" : "Review & send"} <WaIcon />
             </span>
           </motion.button>
         ) : (
-          <motion.a key="chat" className="chat" href={waLink("Hi VMount, I saw your catalogue and have a question.")} target="_blank" rel="noreferrer" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+          <motion.a key="chat" className="chat" href={waLink(dealer ? `Hi VMount, this is ${dealer.shop}. I have a question.` : "Hi VMount, I saw your catalogue and have a question.")} target="_blank" rel="noreferrer" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
             <WaIcon /> Chat
           </motion.a>
         )}
@@ -670,6 +934,7 @@ export default function App() {
       <AnimatePresence>
         {p && c && <ProductModal key="product" p={p} cat={c.id} inquiry={inquiry} />}
         {showInquiry && <InquirySheet key="inquiry" inquiry={inquiry} onClose={() => setShowInquiry(false)} />}
+        {showOrders && <MyOrdersSheet key="orders" onClose={() => setShowOrders(false)} />}
       </AnimatePresence>
 
       <Suspense fallback={null}>

@@ -42,7 +42,65 @@ export type Product = {
   stock?: number | null;
   /** false hides the product from the public catalogue. */
   visible?: boolean;
+  /** Wholesale prices per dealer level (staff only; never in the public list). */
+  wholesale?: Partial<Record<Level, number | null>>;
+  /** Dealers: smallest order in pieces, and pieces per pack (orders go up in packs). */
+  minQty?: number | null;
+  packSize?: number | null;
 };
+
+export type Level = "a" | "b" | "c";
+export const LEVELS: Level[] = ["a", "b", "c"];
+
+export type Dealer = {
+  id: string;
+  /** Secret part of the dealer's private link: /d/<code> */
+  code: string;
+  shop: string;
+  owner: string;
+  phone: string;
+  city: string;
+  level: Level;
+  /** Extra % off their level's prices. */
+  discount: number;
+  /** Special prices for this dealer: product id → ₹. */
+  special: Record<string, number>;
+  active: boolean;
+  notes: string;
+  createdAt?: string;
+};
+
+export type OrderStatus = "new" | "confirmed" | "dispatched" | "paid" | "cancelled";
+export type OrderLine = { id: string; name: string; image?: string; qty: number; price: number | null; lineTotal: number | null };
+export type Order = {
+  id?: string;
+  number: string;
+  dealerId?: string;
+  dealerShop?: string;
+  dealerOwner?: string;
+  dealerPhone?: string;
+  dealerCity?: string;
+  level?: Level;
+  items: OrderLine[];
+  total: number;
+  unpriced: number;
+  note: string;
+  staffNote?: string;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt?: string;
+};
+
+export const STATUS_LABELS: Record<OrderStatus, string> = { new: "New", confirmed: "Confirmed", dispatched: "Dispatched", paid: "Paid", cancelled: "Cancelled" };
+
+/** What a dealer pays: special price, else level price less their discount; null = ask. */
+export function dealerPriceOf(p: Product, d: Pick<Dealer, "level" | "discount" | "special">) {
+  const special = d.special?.[p.id];
+  if (Number.isFinite(special)) return special;
+  const base = p.wholesale?.[d.level];
+  if (typeof base !== "number") return null;
+  return Math.round(base * (1 - (d.discount || 0) / 100));
+}
 
 /** Built-in collections, used until they are first saved on /admin. */
 export const builtInGroups: Group[] = [
@@ -131,8 +189,47 @@ export const photosOf = (p: Product) => (p.images?.length ? p.images : p.image ?
 
 /** Full web address of a page path or photo on this site (for WhatsApp messages). */
 export const absolute = (path: string) => new URL(path, window.location.origin).href;
-/** Link that opens this product in the catalogue. */
-export const productLink = (p: Product, cat: string) => absolute(`/#/c/${cat}/${p.id}`);
+/** Link that opens this product in the catalogue (on a dealer link, keeps the dealer's page). */
+export const productLink = (p: Product, cat: string) => absolute(`${window.location.pathname}#/c/${cat}/${p.id}`);
+
+/* ---------- dealer link (/d/<code>) ---------- */
+
+type Offer = { price: number | null; minQty: number | null; packSize: number | null };
+export type DealerView = { code: string; shop: string; owner: string; city: string; level: string; prices: Record<string, Offer> };
+
+/** The dealer whose private link is open, or null for normal customers. */
+export let dealer: DealerView | null = null;
+
+/** Dealer code from the address (/d/<code>), if any. */
+export const dealerCodeFromPath = () => /^\/d\/([a-z0-9-]{6,48})\/?$/.exec(window.location.pathname)?.[1] ?? null;
+
+/** Load the dealer's prices. Returns an error message when the link isn't active. */
+export async function loadDealer(code: string): Promise<string | null> {
+  try {
+    const r = await fetch(`/api/catalog/dealer/${code}`, { headers: { Accept: "application/json" } });
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) return body.error || "This dealer link isn't working right now.";
+    dealer = { code, ...body.dealer, prices: body.prices };
+    return null;
+  } catch {
+    return "Can't reach V Mount Bikes right now — check your internet connection and try again.";
+  }
+}
+
+const offerOf = (p: Product) => dealer?.prices[p.id];
+/** Price shown to whoever is looking: the dealer's price on a dealer link, else the customer price. */
+export const priceFor = (p: Product) => (dealer ? (offerOf(p)?.price ?? null) : (p.price ?? null));
+/** Dealer ordering rules for a product (pieces). */
+export const packOf = (p: Product) => offerOf(p)?.packSize ?? 1;
+export const minOf = (p: Product) => offerOf(p)?.minQty ?? 1;
+/** First quantity when adding: at least the minimum, in whole packs. */
+export const firstQty = (p: Product) => Math.ceil(Math.max(minOf(p), packOf(p)) / packOf(p)) * packOf(p);
+/** One step up or down (in packs); below the minimum means "remove". */
+export const stepQty = (p: Product, qty: number, dir: 1 | -1) => {
+  if (dir > 0) return qty ? qty + packOf(p) : firstQty(p);
+  const next = qty - packOf(p);
+  return next < minOf(p) ? 0 : next;
+};
 
 export const isOut = (p: Product) => p.stock === 0;
 export const isLow = (p: Product) => typeof p.stock === "number" && p.stock > 0 && p.stock <= 3;

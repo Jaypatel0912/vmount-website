@@ -24,6 +24,18 @@
   [headers.values]
     X-Robots-Tag = "noindex"
 
+# Dealers' private price-list links (same app; prices load only for an active link)
+[[redirects]]
+  from = "/d/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/d/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+    Referrer-Policy = "no-referrer"
+
 [[headers]]
   for = "/images/*"
   [headers.values]

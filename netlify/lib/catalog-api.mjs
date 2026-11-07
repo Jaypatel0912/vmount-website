@@ -5,6 +5,8 @@
 //   PUT    /api/catalog                  save { products, groups } (needs login)
 //   POST   /api/catalog/image            upload a product photo (needs login) -> { url }
 //   GET    /api/catalog/image/<name>     a product photo (public)
+//   GET    /api/catalog/full             products including wholesale prices (needs login)
+//   Dealers, dealer links and orders: see wholesale.mjs
 //
 // Password, in order: CATALOG_PASSWORD, then POSTER_PASSWORD (the main site's staff password), and if
 // neither is set (the usual case for the separate catalogue site) the password is checked with the main
@@ -12,6 +14,7 @@
 // Login tokens are signed with POSTER_SECRET, or a random key created and stored on first use.
 import { randomBytes } from "node:crypto";
 import { decodeImage, handleLogin, isAuthorized, json } from "./auth.mjs";
+import { cleanWholesale, handleDealerLink, handleWholesaleAdmin, publicProducts } from "./wholesale.mjs";
 
 const MAIN_SITE = "https://vmount-cycle.netlify.app";
 
@@ -32,7 +35,7 @@ const optionalInt = (v, max) => {
 };
 
 /** Validate one product. Returns [product, error]. */
-function cleanProduct(p, i) {
+function cleanProduct(p, i, previous) {
   const where = `Product ${i + 1}${p?.name ? ` (${String(p.name).slice(0, 40)})` : ""}`;
   if (!p || typeof p !== "object") return [null, `${where}: invalid`];
   const id = text(p.id, 60).toLowerCase();
@@ -49,6 +52,8 @@ function cleanProduct(p, i) {
   if (Number.isNaN(price)) return [null, `${where}: enter a valid price (or leave it empty)`];
   if (Number.isNaN(stock)) return [null, `${where}: stock must be 0 or more (or empty)`];
   if (!IMAGE.test(image)) return [null, `${where}: add a photo`];
+  const [trade, tradeError] = cleanWholesale(p, previous, where);
+  if (tradeError) return [null, tradeError];
   return [
     {
       id,
@@ -61,6 +66,7 @@ function cleanProduct(p, i) {
       price,
       stock,
       visible: p.visible !== false,
+      ...trade,
     },
     null,
   ];
@@ -142,7 +148,7 @@ export async function handleCatalog(req, store, rawEnv) {
 
   if (path === "/api/catalog" && req.method === "GET") {
     const saved = await store.getJSON("products");
-    return json(saved ?? { products: null }, 200, {
+    return json(publicProducts(saved) ?? { products: null }, 200, {
       "Cache-Control": "public, max-age=0, must-revalidate",
       "Netlify-CDN-Cache-Control": "public, s-maxage=10, stale-while-revalidate=60",
     });
@@ -157,6 +163,10 @@ export async function handleCatalog(req, store, rawEnv) {
     });
   }
 
+  // Dealer's private link: their prices, placing orders, their order history
+  const dealerResponse = await handleDealerLink(req, store, path);
+  if (dealerResponse) return dealerResponse;
+
   const secret = await signingSecret(store, rawEnv);
   if (path === "/api/catalog/login" && req.method === "POST") {
     if (password) return handleLogin(req, { POSTER_PASSWORD: password, POSTER_SECRET: secret });
@@ -165,6 +175,13 @@ export async function handleCatalog(req, store, rawEnv) {
 
   // isAuthorized only needs the password to be "set"; the token check itself uses the secret
   if (!isAuthorized(req, { POSTER_PASSWORD: password || "main-site", POSTER_SECRET: secret })) return json({ error: "Please log in again" }, 401);
+
+  if (path === "/api/catalog/full" && req.method === "GET") {
+    return json((await store.getJSON("products")) ?? { products: null });
+  }
+
+  const wholesaleResponse = await handleWholesaleAdmin(req, store, path);
+  if (wholesaleResponse) return wholesaleResponse;
 
   if (path === "/api/catalog/image" && req.method === "POST") {
     const body = await req.json().catch(() => ({}));
@@ -182,6 +199,7 @@ export async function handleCatalog(req, store, rawEnv) {
     if (!Array.isArray(body?.products)) return json({ error: "Missing product list" }, 400);
     if (body.products.length > MAX_PRODUCTS) return json({ error: `At most ${MAX_PRODUCTS} products` }, 400);
     const previous = await store.getJSON("products");
+    const previousById = new Map((previous?.products ?? []).map((x) => [x.id, x]));
     let groups = previous?.groups ?? null;
     if (body.groups !== undefined) {
       const [clean, error] = cleanGroups(body.groups);
@@ -192,7 +210,7 @@ export async function handleCatalog(req, store, rawEnv) {
     const products = [];
     const ids = new Set();
     for (const [i, p] of body.products.entries()) {
-      const [clean, error] = cleanProduct(p, i);
+      const [clean, error] = cleanProduct(p, i, previousById.get(p?.id));
       if (error) return json({ error }, 400);
       if (ids.has(clean.id)) return json({ error: `Two products use the ID "${clean.id}"` }, 400);
       if (known) {
